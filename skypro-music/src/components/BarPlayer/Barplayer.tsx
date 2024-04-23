@@ -1,6 +1,7 @@
 import styles from "./BarPlayer.module.css"
 import classNames from 'classnames'
 
+
 export default function BarPlayer() {
     return (
         <div className={styles.bar}>
