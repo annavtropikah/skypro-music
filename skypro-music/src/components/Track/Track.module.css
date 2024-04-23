@@ -1,4 +1,19 @@
 
+
+.btnIcon:hover svg {
+  fill: transparent;
+  stroke: #acacac;
+  cursor: pointer;
+}
+.btnIcon:active svg {
+  fill: transparent;
+  stroke: #ffffff;
+  cursor: pointer;
+}
+
+
+
+
 .playlistItem {
     width: 100%;
     display: block;

@@ -9,21 +9,21 @@ import BarPlayer from "@/components/BarPlayer/Barplayer";
 
 export default function Home() {
   return (
-    <div className="wrapper">
-      <div className="container">
-        <main className="main">
-          <Nav/>
-          <Centerblock/>
-          <Sidebar/>
+    <div className={styles.wrapper}>
+      <div className={styles.container}>
+        <main className={styles.main}>
+          <Nav />
+          <Centerblock />
+          <Sidebar />
         </main>
 
 
 
-        <BarPlayer/>
+        <BarPlayer />
 
 
 
-        <footer className="footer" />
+        <footer className={styles.footer} />
       </div>
     </div>
 
