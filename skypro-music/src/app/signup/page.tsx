@@ -1,37 +1,38 @@
 import Image from "next/image";
 import Link from "next/link";
-
+import styles from "./page.module.css";
+import classNames from "classnames"
 
 export default function SignUpPage() {
     return (
-        <div className="wrapper">
-            <div className="container-signup">
-                <div className="modal__block">
-                    <form className="modal__form-login">
+        <div className={styles.wrapper}>
+            <div className={styles.containerSignup}>
+                <div className={styles.modalBlock}>
+                    <form className={styles.modalFormLogin}>
                         <Link href="/signup">
-                            <div className="modal__logo">
+                            <div className={styles.modalLogo}>
                                 <Image width={140} height={21}  src="/img/logo_modal.png" alt="logo" />
                             </div>
                         </Link>
                         <input
-                            className="modal__input login"
+                            className={classNames(styles.modalInput, styles.login)}
                             type="text"
                             name="login"
-                            placeholder="Почта"
+                            placeholder="Логин"
                         />
                         <input
-                            className="modal__input password-first"
+                            className={styles.modalInput}
                             type="password"
                             name="password"
                             placeholder="Пароль"
                         />
                         <input
-                            className="modal__input password-double"
+                            className={styles.modalInput}
                             type="password"
                             name="password"
                             placeholder="Повторите пароль"
                         />
-                        <button className="modal__btn-signup-ent">
+                        <button className={styles.modalBtnSignupEnt}>
                             <Link href="/">Зарегистрироваться</Link>
                         </button>
                     </form>
