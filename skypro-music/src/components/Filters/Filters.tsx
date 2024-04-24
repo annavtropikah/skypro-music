@@ -13,6 +13,7 @@ export default function Filters() {
   return (
     <div className={styles.centerblockFilter}>
       <div className={styles.filterTitle}>Искать по:</div>
+      
       {filters.map((filter)=>(
       <FilterItem
         key={filter.title}
