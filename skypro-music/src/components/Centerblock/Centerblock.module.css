@@ -1,9 +1,11 @@
 .mainCenterblock {
     width: auto;
+
     -webkit-box-flex: 3;
     -ms-flex-positive: 3;
     flex-grow: 3;
     padding: 20px 40px 20px 111px;
+    /* overflow: auto; */
   }
 
 
@@ -127,6 +129,7 @@
     stroke: #696969;
   }
   .contentPlaylist {
+    height: 100vh;
     overflow: auto;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -135,6 +138,6 @@
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
-    overflow-y: auto;
+
   
   }
