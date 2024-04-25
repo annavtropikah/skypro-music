@@ -4,12 +4,12 @@
 
 import { useEffect } from 'react';
 
-// type ErrorType={
-// error: string,
-// reset:any,
-// }
+type ErrorType={
+error: Error,
+reset:()=>void,
+}
 
-export default function Error({ error, reset }) {
+export default function Error({ error, reset }:ErrorType) {
   useEffect(() => {
     // Логирование ошибки
     console.error(error);

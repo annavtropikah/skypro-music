@@ -1,26 +1,64 @@
+'use client'
+import { ChangeEvent, useEffect, useRef, useState } from "react"
 import styles from "./BarPlayer.module.css"
 import classNames from 'classnames'
+import { trackType } from "@/types"
+import ProgressBar from "../ProgressBar/ProgressBar"
+type BarPlayerType = {
+    track: trackType,
+}
+
+export default function BarPlayer({ track }: BarPlayerType) {
+    const audioRef = useRef<null | HTMLAudioElement>(null)
 
 
-export default function BarPlayer() {
+    const [currentTime, setCurrentTime] = useState<number>(0);
+    const [isPlaying, setIsPlaying] = useState<boolean>(false);
+
+
+    const duration = audioRef.current?.duration;
+
+    const togglePlay = () => {
+        if (audioRef.current) {
+            if (isPlaying) {
+                audioRef.current.pause();
+            } else {
+                audioRef.current.play();
+            }
+            setIsPlaying(!isPlaying);
+        }
+    };
+
+useEffect(()=>{
+    audioRef.current?.addEventListener("timeupdate",()=>setCurrentTime(audioRef.current!.currentTime))
+},[]) 
+
+    const handleSeek = (event: ChangeEvent<HTMLInputElement>) => {
+        if (audioRef.current) {
+            setCurrentTime(Number(event.target.value))
+            audioRef.current.currentTime = Number(event.target.value);
+        }
+
+    };
     return (
         <div className={styles.bar}>
             <div className={styles.barContent}>
-                <div className={styles.barPlayerProgress}/>
+                <audio ref={audioRef} src={track.track_file}></audio>
+                <ProgressBar max={duration} value={currentTime} step={0.01} onChange={handleSeek} />
                 <div className={styles.barPlayerBlock}>
                     <div className={styles.barPlayer}>
                         <div className={styles.playerControls}>
-                            <div className={classNames(styles.playerBtnPrev,styles.btn)}>
+                            <div className={classNames(styles.playerBtnPrev, styles.btn)}>
                                 <svg className={styles.playerBtnPrevSvg}>
                                     <use xlinkHref="img/icon/sprite.svg#icon-prev" />
                                 </svg>
                             </div>
-                            <div className={classNames(styles.playerBtnPlay, styles.btn)}>
+                            <div onClick={togglePlay} className={classNames(styles.playerBtnPlay, styles.btn)}>
                                 <svg className={styles.playerBtnPlaySvg}>
-                                    <use xlinkHref="img/icon/sprite.svg#icon-play" />
+                                    <use xlinkHref={`img/icon/sprite.svg#${isPlaying ? "icon-pause" : "icon-play"}`} />
                                 </svg>
                             </div>
-                            <div className={classNames(styles.playerBtnNext,styles.btn)}>
+                            <div className={classNames(styles.playerBtnNext, styles.btn)}>
                                 <svg className={styles.playerBtnNextSvg}>
                                     <use xlinkHref="img/icon/sprite.svg#icon-next" />
                                 </svg>
@@ -45,12 +83,12 @@ export default function BarPlayer() {
                                 </div>
                                 <div className={styles.trackPlayAuthor}>
                                     <a className={styles.trackPlayAuthorLink} href="http://">
-                                        Ты та...
+                                        {track.author}
                                     </a>
                                 </div>
                                 <div className={styles.trackPlayAlbum}>
                                     <a className={styles.trackPlayAlbumLink} href="http://">
-                                        Баста
+                                    {track.name}
                                     </a>
                                 </div>
                             </div>
