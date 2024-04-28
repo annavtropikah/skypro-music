@@ -1,0 +1,77 @@
+.filterButton {
+    
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    border: 1px solid #ffffff;
+    border-radius: 60px;
+    padding: 6px 20px;
+    
+  }
+  
+  .filterButton:not(:last-child) {
+    margin-right: 10px;
+  }
+
+  .btnText:hover {
+    border-color: #d9b6ff;
+    color: #d9b6ff;
+    cursor: pointer;
+  }
+
+  .btnText:active {
+    border-color: #ad61ff;
+    color: #ad61ff;
+    cursor: pointer;
+  }
+
+  .filterResultBlock {
+    display: block;
+  
+  }
+  .filterBlock {
+    
+    display: flex;
+    flex-direction: column;
+    
+  }
+
+  .filterResultUl{
+    position: fixed;
+    height: 305px;
+    width: 248px;
+    
+    margin-top: 10px;
+    background-color: #313131;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+
+    border: 1px solid #313131;
+    border-radius: 10px;
+
+
+    box-sizing: border-box;
+    padding: 20px;
+    overflow-wrap: normal;
+    word-wrap: break-word;
+    overflow: auto;
+
+  }
+  .filterResultLi{
+
+    
+    padding: 10px;
+    word-wrap: break-word;
+    cursor: pointer;
+  }
+  .filterResultLi:hover {
+    color: #B672FF;
+    text-decoration:underline;
+   
+    -webkit-transition: width .3s ease-in-out;
+    -moz--transition: width .3s ease-in-out;
+    transition: width .3s ease-in-out;
+  }

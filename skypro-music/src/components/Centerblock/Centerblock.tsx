@@ -1,32 +1,27 @@
 import Track from "@/components/Track/Track";
 import styles from "./Centerblock.module.css"
 import classNames from 'classnames'
+import Filters from "../Filters/Filters";
+import Search from "../Search/Search";
+import { getTracks } from "@/api/track";
+import { trackType } from "@/types";
 
-export default function Centerblock() {
+export default async function Centerblock() {
+  let tracksData: trackType[]
+  try {
+    tracksData = await getTracks()
+  } catch (error: any) {
+    throw new Error(error.message)
+  }
   return (
     <div className={styles.mainCenterblock}>
-      <div className={styles.centerblockSearch}>
-        <svg className={styles.searchSvg}>
-          <use xlinkHref="img/icon/sprite.svg#icon-search" />
-        </svg>
-        <input
-          className={styles.searchText}
-          type="search"
-          placeholder="Поиск"
-          name="search"
-        />
-      </div>
+
+      <Search />
+
       <h2 className={styles.centerblockH2}>Треки</h2>
-      <div className={styles.centerblockFilter}>
-        <div className={styles.filterTitle}>Искать по:</div>
-        <div className={classNames(styles.filterButton, styles.btnText)}>
-          исполнителю
-        </div>
-        <div className={classNames(styles.filterButton, styles.btnText)}>
-          году выпуска
-        </div>
-        <div className={classNames(styles.filterButton, styles.btnText)}>жанру</div>
-      </div>
+
+      <Filters />
+
       <div className={styles.centerblockContent}>
         <div className={styles.contentTitle}>
           <div className={classNames(styles.playlistTitleCol, styles.col01)}>Трек</div>
@@ -40,10 +35,20 @@ export default function Centerblock() {
         </div>
 
         <div className={styles.contentPlaylist}>
-          <Track />
+          {tracksData.map((trackData) => (
+            <Track
+              key={trackData.id}
+              name={trackData.name}
+              author={trackData.author}
+              album={trackData.album}
+            />
+          ))}
+
         </div>
 
       </div>
     </div>
   )
 }
+
+

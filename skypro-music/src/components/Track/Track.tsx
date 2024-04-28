@@ -1,8 +1,13 @@
 import classNames from "classnames"
 import styles from "./Track.module.css"
 
+type TrackType = {
+  name: string,
+  author: string,
+  album: string,
+}
 
-export default function Track() {
+export default function Track({ name, author, album }:TrackType) {
   return (
     <div className={styles.playlistItem}>
       <div className={styles.playlistTrack}>
@@ -14,21 +19,21 @@ export default function Track() {
           </div>
           <div className={styles.trackTitleText}>
             <a className={styles.trackTitleLink} href="http://">
-              Guilt <span className={styles.trackTitleSpan} />
+              {name} <span className={styles.trackTitleSpan} />
             </a>
           </div>
         </div>
         <div className={styles.trackAuthor}>
           <a className={styles.trackAuthorLink} href="http://">
-            Nero
+            {author}
           </a>
         </div>
         <div className={styles.trackAlbum}>
           <a className={styles.trackAlbumLink} href="http://">
-            Welcome Reality
+            {album}
           </a>
         </div>
-        <div className={classNames(styles.trackTime,styles.btnIcon)}>
+        <div className={classNames(styles.trackTime, styles.btnIcon)}>
           <svg className={styles.trackTimeSvg}>
             <use xlinkHref="img/icon/sprite.svg#icon-like" />
           </svg>
