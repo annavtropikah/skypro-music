@@ -4,20 +4,23 @@ import styles from "./BarPlayer.module.css"
 import classNames from 'classnames'
 import { trackType } from "@/types"
 import ProgressBar from "../ProgressBar/ProgressBar"
+import Volume from "../Volume/Volume"
 type BarPlayerType = {
     track: trackType,
 }
 
 export default function BarPlayer({ track }: BarPlayerType) {
+    //использование useRef для доступа а audio
     const audioRef = useRef<null | HTMLAudioElement>(null)
 
 
     const [currentTime, setCurrentTime] = useState<number>(0);
+    //состояние для управления воспроизведением
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
 
     const duration = audioRef.current?.duration;
-
+    //функция для воспроизведения и паузы
     const togglePlay = () => {
         if (audioRef.current) {
             if (isPlaying) {
@@ -25,13 +28,33 @@ export default function BarPlayer({ track }: BarPlayerType) {
             } else {
                 audioRef.current.play();
             }
-            setIsPlaying(!isPlaying);
+            setIsPlaying((prev) => !prev);
         }
     };
 
-useEffect(()=>{
-    audioRef.current?.addEventListener("timeupdate",()=>setCurrentTime(audioRef.current!.currentTime))
-},[]) 
+
+    const [isLoop, setIsLoop] = useState<boolean>(false);
+    const toggleLoop = () => {
+        setIsLoop((prev) => !prev)
+    }
+
+
+
+    const [volume, setVolume] = useState<number>(0.5);
+
+    useEffect(() => {
+        if (audioRef.current) {
+            audioRef.current.volume = volume;
+        }
+    }, [volume])
+
+
+
+
+
+    useEffect(() => {
+        audioRef.current?.addEventListener("timeupdate", () => setCurrentTime(audioRef.current!.currentTime))
+    }, [])
 
     const handleSeek = (event: ChangeEvent<HTMLInputElement>) => {
         if (audioRef.current) {
@@ -39,11 +62,47 @@ useEffect(()=>{
             audioRef.current.currentTime = Number(event.target.value);
         }
 
-    };
+    }
+
+
+
+ 
+
+    // //NEW
+
+    // const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+    //     const handleEnded = () => {
+    //         // Проверяем, не является ли текущий трек последним в плейлисте
+    //         if (currentTrackIndex < playlist.length - 1) {
+    //             // Переход к следующему треку
+    //             setCurrentTrackIndex(currentTrackIndex + 1);
+    //         } else {
+    //             // Или начинаем плейлист с начала
+    //             setCurrentTrackIndex(0);
+    //         }
+    //     };
+
+    //     // Устанавливаем источник аудио и обработчик события `ended` при изменении трека
+    //     useEffect(() => {
+
+    //         audio.src = playlist[currentTrackIndex].url;
+    //         audio.addEventListener('ended', handleEnded);
+
+    //         // Воспроизводим новый трек
+    //         audio.play();
+
+    //         return () => {
+    //             audio.removeEventListener('ended', handleEnded);
+    //         };
+    //     }, [currentTrackIndex, playlist]);
+
+    // //NEW
+
     return (
         <div className={styles.bar}>
             <div className={styles.barContent}>
-                <audio ref={audioRef} src={track.track_file}></audio>
+                <audio ref={audioRef} src={track.track_file} loop={isLoop}></audio>
+
                 <ProgressBar max={duration} value={currentTime} step={0.01} onChange={handleSeek} />
                 <div className={styles.barPlayerBlock}>
                     <div className={styles.barPlayer}>
@@ -63,9 +122,9 @@ useEffect(()=>{
                                     <use xlinkHref="img/icon/sprite.svg#icon-next" />
                                 </svg>
                             </div>
-                            <div className={classNames(styles.playerBtnRepeat, styles.btnIcon)}>
+                            <div onClick={toggleLoop} className={classNames(styles.playerBtnRepeat, styles.btnIcon)}>
                                 <svg className={styles.playerBtnRepeatSvg}>
-                                    <use xlinkHref="img/icon/sprite.svg#icon-repeat" />
+                                    <use xlinkHref={`img/icon/sprite.svg#${isLoop ? "icon-repeat-active" : "icon-repeat"}`} />
                                 </svg>
                             </div>
                             <div className={classNames(styles.playerBtnShuffle, styles.btnIcon)}>
@@ -88,7 +147,7 @@ useEffect(()=>{
                                 </div>
                                 <div className={styles.trackPlayAlbum}>
                                     <a className={styles.trackPlayAlbumLink} href="http://">
-                                    {track.name}
+                                        {track.name}
                                     </a>
                                 </div>
                             </div>
@@ -106,22 +165,7 @@ useEffect(()=>{
                             </div>
                         </div>
                     </div>
-                    <div className={styles.barVolumeBlock}>
-                        <div className={styles.volumeContent}>
-                            <div className={styles.volumeImage}>
-                                <svg className={styles.volumeSvg}>
-                                    <use xlinkHref="img/icon/sprite.svg#icon-volume" />
-                                </svg>
-                            </div>
-                            <div className={classNames(styles.volumeProgress, styles.btn)}>
-                                <input
-                                    className={classNames(styles.volumeProgressLine, styles.btn)}
-                                    type="range"
-                                    name="range"
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    <Volume min={0} max={1} value={volume} step={0.01} onChange={(e) => setVolume(Number(e.target.value))} />
                 </div>
             </div>
         </div>
