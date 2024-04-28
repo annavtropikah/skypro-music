@@ -5,6 +5,8 @@ import classNames from 'classnames'
 import { trackType } from "@/types"
 import ProgressBar from "../ProgressBar/ProgressBar"
 import Volume from "../Volume/Volume"
+// import duration from 'format-duration-time';
+
 type BarPlayerType = {
     track: trackType,
 }
@@ -98,12 +100,21 @@ export default function BarPlayer({ track }: BarPlayerType) {
 
     // //NEW
 
+
+
     return (
         <div className={styles.bar}>
             <div className={styles.barContent}>
                 <audio ref={audioRef} src={track.track_file} loop={isLoop}></audio>
 
+                <div сlassName={styles.timeBlock}>
+                {/* `${formatDuration([currentTime,0])}/${formatDuration([duration,0])}` */}
+                {/* `${duration(currentTime).format('mm:ss')}/${duration}` */}
+                {currentTime}/{duration}
+                </div>
+
                 <ProgressBar max={duration} value={currentTime} step={0.01} onChange={handleSeek} />
+            
                 <div className={styles.barPlayerBlock}>
                     <div className={styles.barPlayer}>
                         <div className={styles.playerControls}>
