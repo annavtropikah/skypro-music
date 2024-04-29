@@ -303,13 +303,14 @@
 
 
 .timeBlock{
-display: flex;
-align-items: end;
+  display: flex;
+  justify-content: end;
+  margin-right: 20px;
   font-style: normal;
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 24px;
-    color: #ffffff;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 24px;
+  color: #ffffff;
 }
 
 
