@@ -1,4 +1,4 @@
-'use client'
+
 import styles from "./page.module.css";
 
 import Nav from "@/components/Nav/Nav";
@@ -11,17 +11,17 @@ import { trackType } from "@/types";
 
 export default function Home() {
 
-  const [track, setTrack] = useState<trackType | null>(null)
+
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.container}>
         <main className={styles.main}>
           <Nav />
-          <Centerblock setTrack={setTrack}/>
+          <Centerblock />
           <Sidebar />
         </main>
-        {track &&(<BarPlayer track={track}/>)}
+        <BarPlayer />
         <footer className={styles.footer} />
       </div>
     </div>

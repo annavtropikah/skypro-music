@@ -2,16 +2,21 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react"
 import styles from "./BarPlayer.module.css"
 import classNames from 'classnames'
-import { trackType } from "@/types"
+
 import ProgressBar from "../ProgressBar/ProgressBar"
 import Volume from "../Volume/Volume"
-// import duration from 'format-duration-time';
+import { useAppDispatch, useAppSelector } from "@/hooks"
+import { setIsShuffle, setNextTrack, setPrevTrack } from "@/store/features/playListSlice";
 
-type BarPlayerType = {
-    track: trackType,
-}
 
-export default function BarPlayer({ track }: BarPlayerType) {
+export default function BarPlayer() {
+
+    const dispatch = useAppDispatch()
+
+    const currentTrack = useAppSelector((state) => state.playlist.currentTrack);
+    const isShuffle = useAppSelector((state) => state.playlist.isShuffle);
+
+
     //использование useRef для доступа а audio
     const audioRef = useRef<null | HTMLAudioElement>(null)
 
@@ -53,10 +58,12 @@ export default function BarPlayer({ track }: BarPlayerType) {
 
 
 
-
     useEffect(() => {
         audioRef.current?.addEventListener("timeupdate", () => setCurrentTime(audioRef.current!.currentTime))
-    }, [])
+
+},[audioRef.current?.currentTime])
+
+
 
     const handleSeek = (event: ChangeEvent<HTMLInputElement>) => {
         if (audioRef.current) {
@@ -68,7 +75,7 @@ export default function BarPlayer({ track }: BarPlayerType) {
 
 
 
- 
+
 
     // //NEW
 
@@ -100,85 +107,92 @@ export default function BarPlayer({ track }: BarPlayerType) {
 
     // //NEW
 
-
-
+ 
     return (
-        <div className={styles.bar}>
-            <div className={styles.barContent}>
-                <audio ref={audioRef} src={track.track_file} loop={isLoop}></audio>
+        <>
+            {currentTrack && (
+                <div className={styles.bar}>
+                    <div className={styles.barContent}>
+                        <audio ref={audioRef} src={currentTrack.track_file} loop={isLoop}></audio>
 
-                <div сlassName={styles.timeBlock}>
-                {/* `${formatDuration([currentTime,0])}/${formatDuration([duration,0])}` */}
-                {/* `${duration(currentTime).format('mm:ss')}/${duration}` */}
-                {currentTime}/{duration}
-                </div>
-
-                <ProgressBar max={duration} value={currentTime} step={0.01} onChange={handleSeek} />
-            
-                <div className={styles.barPlayerBlock}>
-                    <div className={styles.barPlayer}>
-                        <div className={styles.playerControls}>
-                            <div className={classNames(styles.playerBtnPrev, styles.btn)}>
-                                <svg className={styles.playerBtnPrevSvg}>
-                                    <use xlinkHref="img/icon/sprite.svg#icon-prev" />
-                                </svg>
-                            </div>
-                            <div onClick={togglePlay} className={classNames(styles.playerBtnPlay, styles.btn)}>
-                                <svg className={styles.playerBtnPlaySvg}>
-                                    <use xlinkHref={`img/icon/sprite.svg#${isPlaying ? "icon-pause" : "icon-play"}`} />
-                                </svg>
-                            </div>
-                            <div className={classNames(styles.playerBtnNext, styles.btn)}>
-                                <svg className={styles.playerBtnNextSvg}>
-                                    <use xlinkHref="img/icon/sprite.svg#icon-next" />
-                                </svg>
-                            </div>
-                            <div onClick={toggleLoop} className={classNames(styles.playerBtnRepeat, styles.btnIcon)}>
-                                <svg className={styles.playerBtnRepeatSvg}>
-                                    <use xlinkHref={`img/icon/sprite.svg#${isLoop ? "icon-repeat-active" : "icon-repeat"}`} />
-                                </svg>
-                            </div>
-                            <div className={classNames(styles.playerBtnShuffle, styles.btnIcon)}>
-                                <svg className={styles.playerBtnShuffleSvg}>
-                                    <use xlinkHref="img/icon/sprite.svg#icon-shuffle" />
-                                </svg>
-                            </div>
+                        <div className={styles.timeBlock}>
+                            {/* `${formatDuration([currentTime,0])}/${formatDuration([duration,0])}` */}
+                            {/* `${duration(currentTime).format('mm:ss')}/${duration}` */}
+                            {Math.floor(currentTime)}/{Math.floor(Number(duration))}
                         </div>
-                        <div className={styles.playerTrackPlay}>
-                            <div className={styles.trackPlayContain}>
-                                <div className={styles.trackPlayImage}>
-                                    <svg className={styles.trackPlaySvg}>
-                                        <use xlinkHref="img/icon/sprite.svg#icon-note" />
-                                    </svg>
+
+                        <ProgressBar max={duration} value={currentTime} step={0.01} onChange={handleSeek} />
+
+                        <div className={styles.barPlayerBlock}>
+                            <div className={styles.barPlayer}>
+                                <div className={styles.playerControls}>
+                                    <div onClick={()=>dispatch(setPrevTrack())}
+                                     className={classNames(styles.playerBtnPrev, styles.btn)}>
+                                        <svg className={styles.playerBtnPrevSvg}>
+                                            <use xlinkHref="img/icon/sprite.svg#icon-prev" />
+                                        </svg>
+                                    </div>
+                                    <div onClick={togglePlay} className={classNames(styles.playerBtnPlay, styles.btn)}>
+                                        <svg className={styles.playerBtnPlaySvg}>
+                                            <use xlinkHref={`img/icon/sprite.svg#${isPlaying ? "icon-pause" : "icon-play"}`} />
+                                        </svg>
+                                    </div>
+                                    <div onClick={()=>dispatch(setNextTrack())} 
+                                    className={classNames(styles.playerBtnNext, styles.btn)}>
+                                        <svg className={styles.playerBtnNextSvg}>
+                                            <use xlinkHref="img/icon/sprite.svg#icon-next" />
+                                        </svg>
+                                    </div>
+                                    <div onClick={toggleLoop} className={classNames(styles.playerBtnRepeat, styles.btnIcon)}>
+                                        <svg className={styles.playerBtnRepeatSvg}>
+                                            <use xlinkHref={`img/icon/sprite.svg#${isLoop ? "icon-repeat-active" : "icon-repeat"}`} />
+                                        </svg>
+                                    </div>
+                                    <div onClick={()=>dispatch(setIsShuffle(!isShuffle))} className={classNames(styles.playerBtnShuffle, styles.btnIcon)}>
+                                        <svg className={styles.playerBtnShuffleSvg}>
+                                            {/* <use xlinkHref="img/icon/sprite.svg#icon-shuffle" /> */}
+                                            <use xlinkHref={`img/icon/sprite.svg#${isShuffle ? "icon-shuffle-active" : "icon-shuffle"}`}/>
+                                        </svg>
+                                    </div>
                                 </div>
-                                <div className={styles.trackPlayAuthor}>
-                                    <a className={styles.trackPlayAuthorLink} href="http://">
-                                        {track.author}
-                                    </a>
-                                </div>
-                                <div className={styles.trackPlayAlbum}>
-                                    <a className={styles.trackPlayAlbumLink} href="http://">
-                                        {track.name}
-                                    </a>
+                                <div className={styles.playerTrackPlay}>
+                                    <div className={styles.trackPlayContain}>
+                                        <div className={styles.trackPlayImage}>
+                                            <svg className={styles.trackPlaySvg}>
+                                                <use xlinkHref="img/icon/sprite.svg#icon-note" />
+                                            </svg>
+                                        </div>
+                                        <div className={styles.trackPlayAuthor}>
+                                            <a className={styles.trackPlayAuthorLink} href="http://">
+                                                {currentTrack.author}
+                                            </a>
+                                        </div>
+                                        <div className={styles.trackPlayAlbum}>
+                                            <a className={styles.trackPlayAlbumLink} href="http://">
+                                                {currentTrack.name}
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div className={styles.trackPlayLikeDis}>
+                                        <div className={classNames(styles.trackPlayLike, styles.btnIcon)}>
+                                            <svg className={styles.trackPlayLikeSvg}>
+                                                <use xlinkHref="img/icon/sprite.svg#icon-like" />
+                                            </svg>
+                                        </div>
+                                        <div className={classNames(styles.trackPlayDislike, styles.btnIcon)}>
+                                            <svg className={styles.trackPlayDislikeSvg}>
+                                                <use xlinkHref="img/icon/sprite.svg#icon-dislike" />
+                                            </svg>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div className={styles.trackPlayLikeDis}>
-                                <div className={classNames(styles.trackPlayLike, styles.btnIcon)}>
-                                    <svg className={styles.trackPlayLikeSvg}>
-                                        <use xlinkHref="img/icon/sprite.svg#icon-like" />
-                                    </svg>
-                                </div>
-                                <div className={classNames(styles.trackPlayDislike, styles.btnIcon)}>
-                                    <svg className={styles.trackPlayDislikeSvg}>
-                                        <use xlinkHref="img/icon/sprite.svg#icon-dislike" />
-                                    </svg>
-                                </div>
-                            </div>
+                            <Volume min={0} max={1} value={volume} step={0.01} onChange={(e) => setVolume(Number(e.target.value))} />
                         </div>
                     </div>
-                    <Volume min={0} max={1} value={volume} step={0.01} onChange={(e) => setVolume(Number(e.target.value))} />
                 </div>
-            </div>
-        </div>
+            )}
+        </>
+
     )
 }
