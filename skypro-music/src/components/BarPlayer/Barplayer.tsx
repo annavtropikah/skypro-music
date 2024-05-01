@@ -6,7 +6,7 @@ import classNames from 'classnames'
 import ProgressBar from "../ProgressBar/ProgressBar"
 import Volume from "../Volume/Volume"
 import { useAppDispatch, useAppSelector } from "@/hooks"
-import { IsShuffle, setIsShuffle, setNextTrack, setPrevTrack } from "@/store/features/playListSlice";
+import { setIsShuffle, setNextTrack, setPrevTrack } from "@/store/features/playListSlice";
 
 
 export default function BarPlayer() {
@@ -14,6 +14,8 @@ export default function BarPlayer() {
     const dispatch = useAppDispatch()
 
     const currentTrack = useAppSelector((state) => state.playlist.currentTrack);
+    const isShuffle = useAppSelector((state) => state.playlist.isShuffle);
+
 
     //использование useRef для доступа а audio
     const audioRef = useRef<null | HTMLAudioElement>(null)
@@ -56,10 +58,12 @@ export default function BarPlayer() {
 
 
 
-
     useEffect(() => {
         audioRef.current?.addEventListener("timeupdate", () => setCurrentTime(audioRef.current!.currentTime))
-    }, [])
+
+},[audioRef.current?.currentTime])
+
+
 
     const handleSeek = (event: ChangeEvent<HTMLInputElement>) => {
         if (audioRef.current) {
@@ -144,10 +148,10 @@ export default function BarPlayer() {
                                             <use xlinkHref={`img/icon/sprite.svg#${isLoop ? "icon-repeat-active" : "icon-repeat"}`} />
                                         </svg>
                                     </div>
-                                    <div onClick={()=>dispatch(setIsShuffle(false))} className={classNames(styles.playerBtnShuffle, styles.btnIcon)}>
+                                    <div onClick={()=>dispatch(setIsShuffle(!isShuffle))} className={classNames(styles.playerBtnShuffle, styles.btnIcon)}>
                                         <svg className={styles.playerBtnShuffleSvg}>
-                                            <use xlinkHref="img/icon/sprite.svg#icon-shuffle" />
-                                            {/* <use xlinkHref={`img/icon/sprite.svg#${IsShuffle ? "icon-shuffle-active" : "icon-shuffle"}`}/> */}
+                                            {/* <use xlinkHref="img/icon/sprite.svg#icon-shuffle" /> */}
+                                            <use xlinkHref={`img/icon/sprite.svg#${isShuffle ? "icon-shuffle-active" : "icon-shuffle"}`}/>
                                         </svg>
                                     </div>
                                 </div>

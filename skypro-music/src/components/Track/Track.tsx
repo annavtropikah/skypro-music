@@ -20,7 +20,10 @@ export default function Track({ trackData, tracksData }: TrackType) {
   const dispatch = useAppDispatch()
   const handleTrackKlick = () => {
     dispatch(setCurrentTrack({ trackData, tracksData }))
+    
   }
+
+  //при нажатии на трэк он НЕ начинает играть сразу
   return (
     <div onClick={handleTrackKlick}
       className={styles.playlistItem}>

@@ -45,6 +45,7 @@ export default async function Centerblock() {
         <div className={styles.contentPlaylist}>
           {tracksData.map((trackData) => (
             <Track
+            key={trackData.id}
             trackData={trackData}
             tracksData={tracksData}
             />
