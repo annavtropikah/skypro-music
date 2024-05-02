@@ -1,4 +1,4 @@
-
+"use client"
 import Track from "@/components/Track/Track";
 import styles from "./Centerblock.module.css"
 import classNames from 'classnames'
@@ -6,30 +6,33 @@ import Filters from "../Filters/Filters";
 import Search from "../Search/Search";
 import { getTracks } from "@/api/track";
 import { trackType } from "@/types";
+import { useAppDispatch, useAppSelector } from "@/hooks";
+import { setInitialTracks } from "@/store/features/playListSlice";
+import { useEffect, useState } from "react";
 
 
 
-export default async function Centerblock() {
+export default function Centerblock() {
 
+  const dispatch = useAppDispatch()
+  const [tracks, setTracks] = useState<trackType[]>([])
+const filteredTracks=useAppSelector((state)=>state.playlist.filteredTracks)
   let tracksData: trackType[]
-  try {
-    tracksData = await getTracks()
-  } catch (error: any) {
-    throw new Error(error.message)
-  }
-
-
+  
+  useEffect( () => {
+     getTracks().then((tracksData)=>{
+      setTracks(tracksData)
+      dispatch(setInitialTracks({ initialTracks: tracksData }))
+     })
+      
+  }, [dispatch])
 
 
   return (
     <div className={styles.mainCenterblock}>
-
       <Search />
-
       <h2 className={styles.centerblockH2}>Треки</h2>
-
-      <Filters />
-
+      <Filters tracksData={tracks} />
       <div className={styles.centerblockContent}>
         <div className={styles.contentTitle}>
           <div className={classNames(styles.playlistTitleCol, styles.col01)}>Трек</div>
@@ -43,10 +46,11 @@ export default async function Centerblock() {
         </div>
 
         <div className={styles.contentPlaylist}>
-          {tracksData.map((trackData) => (
+          {filteredTracks.map((trackData) => (
             <Track
-            trackData={trackData}
-            tracksData={tracksData}
+              key={trackData.id}
+              trackData={trackData}
+              tracksData={tracksData}
             />
           ))}
 
