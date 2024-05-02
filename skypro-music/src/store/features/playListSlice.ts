@@ -4,6 +4,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type PlayListStateType = {
     currentTrack: null | trackType,
+    currentTrackIndex: null | number,
     playlist: trackType[],
     shuffledPlaylist: trackType[],
     isShuffle: boolean,
@@ -21,6 +22,7 @@ type PlayListStateType = {
 //первоначальное состояние
 const initialState: PlayListStateType = {
     currentTrack: null,
+    currentTrackIndex: null,
     playlist: [],
     shuffledPlaylist: [],
     isShuffle: false,
@@ -31,8 +33,8 @@ const initialState: PlayListStateType = {
         searchValue: "",
 
     },
-    filteredTracks: [],
-    initialTracks: [],
+    filteredTracks: [], // трэки по выбранному фильтру
+    initialTracks: [], // все трэки
 };
 
 const playListSlice = createSlice({
@@ -41,10 +43,15 @@ const playListSlice = createSlice({
     reducers: {
         setInitialTracks: (state, action: PayloadAction<{ initialTracks: trackType[] }>) => {
             state.initialTracks = action.payload.initialTracks
-            state.filteredTracks=action.payload.initialTracks
+            state.filteredTracks = action.payload.initialTracks
+            state.playlist = action.payload.initialTracks
         },
         setCurrentTrack: (state, action: PayloadAction<{ trackData: trackType, tracksData: trackType[] }>) => {
             state.currentTrack = action.payload.trackData;
+            const currentTrackIndex = state.playlist.findIndex((track) => track.id === action.payload.trackData?.id)
+
+            console.log('setCurrentTrack index', currentTrackIndex)
+            state.currentTrackIndex = currentTrackIndex
             state.playlist = action.payload.tracksData;
             state.shuffledPlaylist = [...action.payload.tracksData].sort(() => 0.5 - Math.random())
         },
@@ -55,6 +62,7 @@ const playListSlice = createSlice({
             const newTrack = playlist[currentTrackIndex + 1]
             if (newTrack) {
                 state.currentTrack = newTrack
+                state.currentTrackIndex = currentTrackIndex
             }
         },
 
@@ -65,6 +73,7 @@ const playListSlice = createSlice({
             const newTrack = playlist[currentTrackIndex - 1]
             if (newTrack) {
                 state.currentTrack = newTrack
+                state.currentTrackIndex = currentTrackIndex
             }
         },
 
@@ -89,6 +98,10 @@ const playListSlice = createSlice({
                 const hasSearchValue=track.name.toLowerCase().includes(state.filretOptions.searchValue.toLowerCase())
                 return isAuthors && hasSearchValue
             })
+        },
+        setCurrentTrackIndex: (state, action: PayloadAction<number>) => {
+            state.currentTrackIndex = action.payload;
+            state.currentTrack = state.playlist[action.payload];
         }
     }
 })
@@ -101,6 +114,7 @@ export const { setIsTrackPlaying } = playListSlice.actions;
 export const { setIsTrackEnd } = playListSlice.actions;
 export const { setFilters } = playListSlice.actions;
 export const { setInitialTracks } = playListSlice.actions;
+export const { setCurrentTrackIndex } = playListSlice.actions;
 
 
 

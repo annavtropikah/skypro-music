@@ -8,23 +8,21 @@ import {formatSecondsToMMSS} from "@/utils";
 
 type TrackType = {
   trackData: trackType,
-  tracksData: trackType[]
 }
 
 
-export default function Track({ trackData, tracksData }: TrackType) {
+export default function Track({ trackData }: TrackType) {
   //получаем текущий трек из store
   const currentTrack = useAppSelector((state) => state.playlist.currentTrack)
+  const tracksData = useAppSelector((state) => state.playlist.initialTracks);
+
   const { name, author, album, duration_in_seconds, id } = trackData
   const isPlaying = currentTrack ? currentTrack.id === id : false
   //вывести сиреневую точечку и стилизовать оносительно изплэинг или можно класс добавить и стилизовать
   const dispatch = useAppDispatch()
   const handleTrackClick = () => {
     dispatch(setCurrentTrack({ trackData, tracksData }))
-//обращение к элементу аудио по id чтобы вызвать у него play чтобы трэк заиграл при клике
-    const audio: HTMLAudioElement | null = document.getElementById("audio-id") as HTMLAudioElement;
-    audio?.play();
-    
+    //обращение к элементу аудио по id чтобы вызвать у него play чтобы трэк заиграл при клике
     dispatch(setIsTrackPlaying(true));
   }
 

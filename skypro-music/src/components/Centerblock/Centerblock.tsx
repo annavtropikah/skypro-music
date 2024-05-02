@@ -16,17 +16,14 @@ export default function Centerblock() {
 
   const dispatch = useAppDispatch()
   const [tracks, setTracks] = useState<trackType[]>([])
-const filteredTracks=useAppSelector((state)=>state.playlist.filteredTracks)
-  let tracksData: trackType[]
-  
-  useEffect( () => {
-     getTracks().then((tracksData)=>{
-      setTracks(tracksData)
-      dispatch(setInitialTracks({ initialTracks: tracksData }))
-     })
-      
-  }, [dispatch])
+  const filteredTracks=useAppSelector((state) => state.playlist.filteredTracks);
 
+  useEffect( () => {
+     getTracks().then((data)=>{
+      setTracks(data)
+      dispatch(setInitialTracks({ initialTracks: data }))
+     })
+  }, [dispatch])
 
   return (
     <div className={styles.mainCenterblock}>
@@ -50,7 +47,6 @@ const filteredTracks=useAppSelector((state)=>state.playlist.filteredTracks)
             <Track
               key={trackData.id}
               trackData={trackData}
-              tracksData={tracksData}
             />
           ))}
 
