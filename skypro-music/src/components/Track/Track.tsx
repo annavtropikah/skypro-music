@@ -38,7 +38,9 @@ export default function Track({ trackData }: TrackType) {
 
             {isPlaying ?
               (<div className={styles.playingDot}>
-       
+                {/* <svg className={classNames(styles.trackTitleSvg, styles.trackTitleIsPlaying)}>
+                  <use xlinkHref="img/icon/sprite.svg#this-is-playing" />
+                </svg> */}
               </div>
               ) : (
                   <div>
@@ -47,7 +49,12 @@ export default function Track({ trackData }: TrackType) {
                     </svg>
                   </div>
                 )}
-         
+            {/*{!isPlaying &&*/}
+            {/*  (<div><svg className={styles.trackTitleSvg}>*/}
+            {/*    <use xlinkHref="img/icon/sprite.svg#icon-note" />*/}
+            {/*  </svg>*/}
+            {/*  </div>*/}
+            {/*  )}*/}
 
           </div>
           <div className={styles.trackTitleText}>
