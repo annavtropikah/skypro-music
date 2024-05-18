@@ -22,9 +22,11 @@ export default function Track({ trackData }: TrackType) {
   const dispatch = useAppDispatch()
   const handleTrackClick = () => {
     dispatch(setCurrentTrack({ trackData, tracksData }))
+
     //обращение к элементу аудио по id чтобы вызвать у него play чтобы трэк заиграл при клике
     dispatch(setIsTrackPlaying(true));
   }
+
 
 
   return (

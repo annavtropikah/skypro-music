@@ -45,8 +45,11 @@ export default function Centerblock() {
         <div className={styles.contentPlaylist}>
           {filteredTracks.map((trackData) => (
             <Track
+
               key={trackData.id}
               trackData={trackData}
+
+
             />
           ))}
 
