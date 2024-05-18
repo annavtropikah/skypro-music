@@ -1,12 +1,14 @@
 'use client'
-import { ChangeEvent, useEffect, useRef, useState } from "react"
+import {ChangeEvent, useCallback, useEffect, useRef, useState} from "react"
 import styles from "./BarPlayer.module.css"
 import classNames from 'classnames'
 
 import ProgressBar from "../ProgressBar/ProgressBar"
 import Volume from "../Volume/Volume"
 import { useAppDispatch, useAppSelector } from "@/hooks"
-import { setIsShuffle, setNextTrack, setPrevTrack } from "@/store/features/playListSlice";
+
+import { setIsShuffle, setNextTrack, setPrevTrack, setIsTrackPlaying, setCurrentTrackIndex } from "@/store/features/playListSlice";
+import { formatSecondsToMMSS} from "@/utils";
 
 
 export default function BarPlayer() {
@@ -14,40 +16,47 @@ export default function BarPlayer() {
     const dispatch = useAppDispatch()
 
     const currentTrack = useAppSelector((state) => state.playlist.currentTrack);
+
+    const currentTrackIndex = useAppSelector((state) => state.playlist.currentTrackIndex);
     const isShuffle = useAppSelector((state) => state.playlist.isShuffle);
+    const isTrackPlaying = useAppSelector((state) => state.playlist.isPlaying);
 
 
-    //использование useRef для доступа а audio
+    const isEnd= useAppSelector((state) => state.playlist.isEnd);
+    const playlist = useAppSelector((state)=> state.playlist.playlist)
+
+    // использование useRef для доступа а audio
     const audioRef = useRef<null | HTMLAudioElement>(null)
 
-
-    const [currentTime, setCurrentTime] = useState<number>(0);
-    //состояние для управления воспроизведением
-    const [isPlaying, setIsPlaying] = useState<boolean>(false);
-
+    const [currentTime, setCurrentTime] = useState(0);
 
     const duration = audioRef.current?.duration;
     //функция для воспроизведения и паузы
     const togglePlay = () => {
         if (audioRef.current) {
-            if (isPlaying) {
+            if (isTrackPlaying) {
                 audioRef.current.pause();
             } else {
                 audioRef.current.play();
             }
-            setIsPlaying((prev) => !prev);
+            dispatch(setIsTrackPlaying(!isTrackPlaying));
         }
     };
-
+//обернула диспатчи соответствующих функций в функции hendle
+    const handleNextTrack = () => {
+        dispatch(setNextTrack());
+    }
+//обернула диспатчи соответствующих функций в функции hendle
+    const handlePrevTrack = () => {
+        dispatch(setPrevTrack());
+    }
 
     const [isLoop, setIsLoop] = useState<boolean>(false);
     const toggleLoop = () => {
         setIsLoop((prev) => !prev)
     }
 
-
-
-    const [volume, setVolume] = useState<number>(0.5);
+    const [volume, setVolume] = useState<number>(0.1);
 
     useEffect(() => {
         if (audioRef.current) {
@@ -56,13 +65,13 @@ export default function BarPlayer() {
     }, [volume])
 
 
-
-
     useEffect(() => {
-        audioRef.current?.addEventListener("timeupdate", () => setCurrentTime(audioRef.current!.currentTime))
-
-},[audioRef.current?.currentTime])
-
+        audioRef.current?.addEventListener("timeupdate", () => {
+            if (audioRef.current?.currentTime) {
+                setCurrentTime(audioRef.current?.currentTime)
+            }
+        })
+    }, [audioRef.current?.currentTime, currentTrack?.id])
 
 
     const handleSeek = (event: ChangeEvent<HTMLInputElement>) => {
@@ -70,63 +79,66 @@ export default function BarPlayer() {
             setCurrentTime(Number(event.target.value))
             audioRef.current.currentTime = Number(event.target.value);
         }
-
     }
 
+    //чтобы плэй срабатывал при плике на трэк
+    useEffect(() => {
+        if (isTrackPlaying) {
+            audioRef.current?.play();
+        }
+    }, [currentTrack?.id, isTrackPlaying])
 
+    //обнуление currenttime (value) чтобы прогресс бар обнулялся при клике на трек
+    useEffect(() => {
+        setCurrentTime(0);
+    }, [currentTrack?.id])
 
-
-
-    // //NEW
-
-    // const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-    //     const handleEnded = () => {
-    //         // Проверяем, не является ли текущий трек последним в плейлисте
-    //         if (currentTrackIndex < playlist.length - 1) {
-    //             // Переход к следующему треку
-    //             setCurrentTrackIndex(currentTrackIndex + 1);
-    //         } else {
-    //             // Или начинаем плейлист с начала
-    //             setCurrentTrackIndex(0);
-    //         }
-    //     };
+    const handleEnded = useCallback(() => {
+        if (currentTrackIndex || currentTrackIndex === 0) {
+            // Проверяем, не является ли текущий трек последним в плейлисте
+            if (currentTrackIndex < playlist.length - 1) {
+                // Переход к следующему треку
+                dispatch(setCurrentTrackIndex(currentTrackIndex + 1));
+            } else {
+                // Или начинаем плейлист с начала
+                dispatch(setCurrentTrackIndex(0));
+            }
+        }
+    }, [currentTrackIndex, playlist, dispatch]);
 
     //     // Устанавливаем источник аудио и обработчик события `ended` при изменении трека
-    //     useEffect(() => {
+        useEffect(() => {
+            audioRef.current?.addEventListener("ended", handleEnded)
 
-    //         audio.src = playlist[currentTrackIndex].url;
-    //         audio.addEventListener('ended', handleEnded);
-
-    //         // Воспроизводим новый трек
-    //         audio.play();
-
-    //         return () => {
-    //             audio.removeEventListener('ended', handleEnded);
-    //         };
-    //     }, [currentTrackIndex, playlist]);
+            return () => {
+                audioRef.current?.removeEventListener('ended', handleEnded);
+            };
+        }, [currentTrackIndex, handleEnded]);
 
     // //NEW
 
- 
     return (
         <>
             {currentTrack && (
                 <div className={styles.bar}>
                     <div className={styles.barContent}>
-                        <audio ref={audioRef} src={currentTrack.track_file} loop={isLoop}></audio>
+                        {/* добавила id для аудио для обращения к этому элементу в другом компоненте */}
+                        <audio id="audio-id" ref={audioRef} src={currentTrack.track_file} loop={isLoop}></audio>
 
-                        <div className={styles.timeBlock}>
-                            {/* `${formatDuration([currentTime,0])}/${formatDuration([duration,0])}` */}
-                            {/* `${duration(currentTime).format('mm:ss')}/${duration}` */}
-                            {Math.floor(currentTime)}/{Math.floor(Number(duration))}
-                        </div>
+                        {duration && (
+                            <div className={styles.timeBlock}>
+                                {/* `${formatDuration([currentTime,0])}/${formatDuration([duration,0])}` */}
+                                {/* `${duration(currentTime).format('mm:ss')}/${duration}` */}
+                                {formatSecondsToMMSS(currentTime)}/{formatSecondsToMMSS(Number(duration))}
+                            </div>
+                        )}
 
                         <ProgressBar max={duration} value={currentTime} step={0.01} onChange={handleSeek} />
 
                         <div className={styles.barPlayerBlock}>
                             <div className={styles.barPlayer}>
                                 <div className={styles.playerControls}>
-                                    <div onClick={()=>dispatch(setPrevTrack())}
+                                    <div onClick={handlePrevTrack}
                                      className={classNames(styles.playerBtnPrev, styles.btn)}>
                                         <svg className={styles.playerBtnPrevSvg}>
                                             <use xlinkHref="img/icon/sprite.svg#icon-prev" />
@@ -134,10 +146,10 @@ export default function BarPlayer() {
                                     </div>
                                     <div onClick={togglePlay} className={classNames(styles.playerBtnPlay, styles.btn)}>
                                         <svg className={styles.playerBtnPlaySvg}>
-                                            <use xlinkHref={`img/icon/sprite.svg#${isPlaying ? "icon-pause" : "icon-play"}`} />
+                                            <use xlinkHref={`img/icon/sprite.svg#${isTrackPlaying ? "icon-pause" : "icon-play"}`} />
                                         </svg>
                                     </div>
-                                    <div onClick={()=>dispatch(setNextTrack())} 
+                                    <div onClick={handleNextTrack}
                                     className={classNames(styles.playerBtnNext, styles.btn)}>
                                         <svg className={styles.playerBtnNextSvg}>
                                             <use xlinkHref="img/icon/sprite.svg#icon-next" />
@@ -148,9 +160,11 @@ export default function BarPlayer() {
                                             <use xlinkHref={`img/icon/sprite.svg#${isLoop ? "icon-repeat-active" : "icon-repeat"}`} />
                                         </svg>
                                     </div>
-                                    <div onClick={()=>dispatch(setIsShuffle(!isShuffle))} className={classNames(styles.playerBtnShuffle, styles.btnIcon)}>
+
+                                    <div onClick={()=> dispatch(setIsShuffle(!isShuffle))} className={classNames(styles.playerBtnShuffle, styles.btnIcon)}>
                                         <svg className={styles.playerBtnShuffleSvg}>
-                                            {/* <use xlinkHref="img/icon/sprite.svg#icon-shuffle" /> */}
+                                            {/*<use xlinkHref="img/icon/sprite.svg#icon-shuffle" />*/}
+
                                             <use xlinkHref={`img/icon/sprite.svg#${isShuffle ? "icon-shuffle-active" : "icon-shuffle"}`}/>
                                         </svg>
                                     </div>
