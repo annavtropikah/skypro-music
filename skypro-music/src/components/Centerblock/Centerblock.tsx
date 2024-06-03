@@ -29,7 +29,7 @@ export default function Centerblock() {
     <div className={styles.mainCenterblock}>
       <Search />
       <h2 className={styles.centerblockH2}>Треки</h2>
-      <Filters tracksData={tracks} />
+      <Filters  />
       <div className={styles.centerblockContent}>
         <div className={styles.contentTitle}>
           <div className={classNames(styles.playlistTitleCol, styles.col01)}>Трек</div>
@@ -43,12 +43,12 @@ export default function Centerblock() {
         </div>
 
         <div className={styles.contentPlaylist}>
+          
           {filteredTracks.map((trackData) => (
             <Track
 
               key={trackData.id}
               trackData={trackData}
-
 
             />
           ))}

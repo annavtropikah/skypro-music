@@ -6,7 +6,7 @@ import { trackType } from "@/types";
 import { setCurrentTrack, setIsTrackPlaying } from "@/store/features/playListSlice";
 import { formatSecondsToMMSS } from "@/utils";
 
-type TrackType = {
+export type TrackType = {
   trackData: trackType,
 }
 
@@ -17,7 +17,7 @@ export default function Track({ trackData }: TrackType) {
   const tracksData = useAppSelector((state) => state.playlist.initialTracks);
 
   const { name, author, album, duration_in_seconds, id } = trackData
-  const isPlayingIcon = currentTrack?.id === id ? isPlaying : false
+  // const isPlayingIcon = currentTrack?.id === id ? isPlaying : false
   //вывести сиреневую точечку и стилизовать оносительно изплэинг или можно класс добавить и стилизовать
   const dispatch = useAppDispatch()
   const handleTrackClick = () => {

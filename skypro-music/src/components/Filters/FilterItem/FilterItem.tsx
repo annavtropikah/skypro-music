@@ -11,7 +11,7 @@ type FilterItemType = {
     value: "author" | "genre" | "order",
     handleFilterClick: (newFilter: string) => void,
     isOpen: boolean,
-    tracksData: trackType[],
+
     optionList: string[] | string;
 }
 
