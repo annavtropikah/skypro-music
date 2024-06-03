@@ -12,6 +12,10 @@ type PlayListStateType = {
     isEnd: boolean,
     filretOptions: {
         author: string[],
+        genre: string[],
+        order: string,
+
+
         searchValue: string,
 
     },
@@ -30,6 +34,9 @@ const initialState: PlayListStateType = {
     isEnd: false,
     filretOptions: {
         author: [],
+        genre: [],
+        order: "по умолчанию",
+
         searchValue: "",
 
     },
@@ -87,41 +94,73 @@ const playListSlice = createSlice({
         setIsTrackEnd: (state, action: PayloadAction<boolean>) => {
             state.isEnd = action.payload
         },
-        setFilters: (state, action: PayloadAction<{ author?: string[], searchValue?: string }>) => {
-            state.filretOptions = {
-                author: action.payload.author || state.filretOptions.author,
-                searchValue: action.payload.searchValue || state.filretOptions.searchValue,
-            }
-            state.filteredTracks = state.initialTracks.filter((track) => {
-                const hasAuthors = state.filretOptions.author.length !== 0
-                const isAuthors = hasAuthors ? state.filretOptions.author.includes(track.author) : true
-                const hasSearchValue=track.name.toLowerCase().includes(state.filretOptions.searchValue.toLowerCase())
-                return isAuthors && hasSearchValue
-            })
-        },
         setCurrentTrackIndex: (state, action: PayloadAction<number>) => {
             state.currentTrackIndex = action.payload;
             state.currentTrack = state.playlist[action.payload];
-        }
-    }
-})
-
-export const { setCurrentTrack } = playListSlice.actions;
-export const { setNextTrack } = playListSlice.actions;
-export const { setPrevTrack } = playListSlice.actions;
-export const { setIsShuffle } = playListSlice.actions;
-
-export const { setIsTrackPlaying } = playListSlice.actions;
-export const { setIsTrackEnd } = playListSlice.actions;
-export const { setFilters } = playListSlice.actions;
-export const { setInitialTracks } = playListSlice.actions;
-export const { setCurrentTrackIndex } = playListSlice.actions;
+        },
+        setFilters: (state, action: PayloadAction<{ author?: string[], genre?: string[], order?: string, searchValue?: string }>) => {
+            state.filretOptions = {
+                author: action.payload.author || state.filretOptions.author,
+                genre: action.payload.genre || state.filretOptions.genre,
+                order: action.payload.order || state.filretOptions.order,
 
 
+                searchValue: typeof action.payload.searchValue === "string"
+                    ? action.payload.searchValue : state.filretOptions.searchValue,
+            }
+
+            const filteredArr = state.initialTracks.filter((track) => {
+                const hasAuthors = state.filretOptions.author.length !== 0
+                const isAuthors = hasAuthors ? state.filretOptions.author.includes(track.author) : true
+                const hasGenres = state.filretOptions.genre.length !== 0
+                const isGenre = hasGenres ? state.filretOptions.genre.includes(track.genre) : true
+
+                const hasSearchValue = 
+                track.name.toLowerCase().includes(state.filretOptions.searchValue.toLowerCase()) || 
+                track.author.toLowerCase().includes(state.filretOptions.searchValue.toLowerCase())
+                return isAuthors && isGenre && hasSearchValue
+            })
+
+            switch (state.filretOptions.order) {
+                case "сначала новые":
+                  filteredArr.sort(
+                    (a, b) =>
+                      new Date(b.release_date).getTime() -
+                      new Date(a.release_date).getTime()
+                  );
+                  break;
+                case "сначала старые":
+                  filteredArr.sort(
+                    (a, b) =>
+                      new Date(a.release_date).getTime() -
+                      new Date(b.release_date).getTime()
+                  );
+                  break;
+                default:
+                  filteredArr;
+                  break;
+              }
+              state.filteredTracks = filteredArr;
+            },
+          },
+        });
+
+        export const { setCurrentTrack } = playListSlice.actions;
+        export const { setNextTrack } = playListSlice.actions;
+        export const { setPrevTrack } = playListSlice.actions;
+        export const { setIsShuffle } = playListSlice.actions;
+
+        export const { setIsTrackPlaying } = playListSlice.actions;
+        export const { setIsTrackEnd } = playListSlice.actions;
+        export const { setFilters } = playListSlice.actions;
+        export const { setInitialTracks } = playListSlice.actions;
+        export const { setCurrentTrackIndex } = playListSlice.actions;
 
 
 
 
 
 
-export const playListReducer = playListSlice.reducer;
+
+
+        export const playListReducer = playListSlice.reducer;
