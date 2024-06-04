@@ -1,11 +1,10 @@
 'use client'
 import Image from "next/image"
 import styles from "./Nav.module.css"
-import { useState } from "react"
+import { memo, useState } from "react"
 import Link from "next/link"
 
-
-export default function Nav() {
+function Nav() {
   const [isOpened, setIsOpend] = useState<boolean>(false)
 
 
@@ -49,3 +48,5 @@ export default function Nav() {
     </nav>
   )
 }
+
+export default memo(Nav)

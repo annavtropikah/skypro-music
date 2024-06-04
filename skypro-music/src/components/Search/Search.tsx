@@ -1,12 +1,11 @@
 "use client"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, memo, useState } from "react"
 import styles from "./Search.module.css"
 import classNames from 'classnames'
 import { useAppDispatch } from "@/hooks"
 import { setFilters } from "@/store/features/playListSlice"
 
-
-export default function Search() {
+function Search() {
   const [searchValue, setSearchValue] = useState("")
   const dispatch = useAppDispatch()
   const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
@@ -28,3 +27,5 @@ export default function Search() {
     </div>
   )
 }
+
+export default memo(Search)

@@ -1,8 +1,9 @@
+import { memo } from "react";
 import Link from "next/link";
 import styles from "./Sidebar.module.css"
 import Image from "next/image";
 
-export default function Sidebar() {
+function Sidebar() {
   return (
     <div className={styles.mainSidebar}>
       <div className={styles.sidebarPersonal}>
@@ -53,3 +54,5 @@ export default function Sidebar() {
     </div>
   )
 }
+
+export default memo(Sidebar)

@@ -8,11 +8,10 @@ import { getTracks } from "@/api/tracks";
 import { trackType } from "@/types";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { setInitialTracks } from "@/store/features/playListSlice";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 
-
-export default function Centerblock({ tracks }: { tracks: trackType[] }) {
+function Centerblock({ tracks }: { tracks: trackType[] }) {
 
   // const dispatch = useAppDispatch()
   // const [tracks, setTracks] = useState<trackType[]>([])
@@ -63,3 +62,6 @@ export default function Centerblock({ tracks }: { tracks: trackType[] }) {
 }
 
 
+
+
+export default memo(Centerblock)

@@ -11,7 +11,6 @@ export async function getTracks() {
     return res.json();
   }
   
-
   export async function getPlaylistTracks(id:string) {
     const res = await fetch(apiUrlPlaylist + id);
 

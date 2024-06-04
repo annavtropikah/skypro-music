@@ -125,7 +125,7 @@ export default function BarPlayer() {
                         {/* добавила id для аудио для обращения к этому элементу в другом компоненте */}
                         <audio id="audio-id" ref={audioRef} src={currentTrack.track_file} loop={isLoop}></audio>
 
-                        {duration && (
+                        {!isNaN (Number(duration)) && (
                             <div className={styles.timeBlock}>
                                 {/* `${formatDuration([currentTime,0])}/${formatDuration([duration,0])}` */}
                                 {/* `${duration(currentTime).format('mm:ss')}/${duration}` */}
