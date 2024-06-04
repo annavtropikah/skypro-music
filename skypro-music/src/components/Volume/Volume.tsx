@@ -1,5 +1,5 @@
 
-import { ChangeEvent } from "react";
+import { ChangeEvent, memo } from "react";
 import styles from "./Volume.module.css";
 import classNames from "classnames";
 
@@ -11,7 +11,7 @@ type VolumeBarType = {
     onChange: (e: ChangeEvent<HTMLInputElement>) => void,
     
 }
-export default function Volume({ min = 0, max=1, value, step, onChange }: VolumeBarType) {
+function Volume({ min = 0, max=1, value, step, onChange }: VolumeBarType) {
     return (
         <div className={styles.barVolumeBlock}>
             <div className={styles.volumeContent}>
@@ -35,3 +35,4 @@ export default function Volume({ min = 0, max=1, value, step, onChange }: Volume
         </div>
     )
 }
+export default memo(Volume)

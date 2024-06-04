@@ -4,7 +4,7 @@ import { trackType } from "@/types"
 import { order } from "../data"
 import { useAppDispatch, useAppSelector } from "@/hooks"
 import { setFilters } from "@/store/features/playListSlice"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 type FilterItemType = {
     title: string,
@@ -24,7 +24,7 @@ export default function FilterItem({ handleFilterClick, title, value, isOpen, op
     const dispatch = useAppDispatch();
 
 
-    const getFilterList = () => {
+    const filteredList = useMemo(() => {
         if (value !== "order") {
 
             const array = new Set(playlist?.map((track: trackType) => track[value]) || [])
@@ -32,7 +32,7 @@ export default function FilterItem({ handleFilterClick, title, value, isOpen, op
         }
 
         return order
-    }
+    },[playlist,value])
 
 
 
@@ -54,10 +54,6 @@ export default function FilterItem({ handleFilterClick, title, value, isOpen, op
 
 
 
-
-    getFilterList()
-
-
     return (
         <>
             {isOpen ? (
@@ -76,7 +72,7 @@ export default function FilterItem({ handleFilterClick, title, value, isOpen, op
                     <div className={styles.filterResultBlock}>
                        
                             <ul className={styles.filterResultUl}>
-                                {getFilterList().map((item) => (
+                                {filteredList.map((item) => (
                                     <li key={item} onClick={() => toggleFilter(item)} className={classNames(styles.filterResultLi, {
                                         [styles.filterResultLiActive]: value === "order" ? item === optionList : optionList.includes(item),
                                     })}>
