@@ -1,8 +1,9 @@
 import BarPlayer from "@/components/BarPlayer/Barplayer"
-import Centerblock from "@/components/Centerblock/Centerblock"
+
 import Nav from "@/components/Nav/Nav"
 import Sidebar from "@/components/Sidebar/Sidebar"
 import styles from "./layout.module.css";
+import Search from "@/components/Search/Search";
 
 export default function TracksLayout({ children }:
     Readonly<{ children: React.ReactNode; }>) {
@@ -11,7 +12,12 @@ export default function TracksLayout({ children }:
             <div className={styles.container}>
                 <main className={styles.main}>
                     <Nav />
-                    <Centerblock />
+                    <div className={styles.mainCenterblock}>
+                  
+                    <Search />
+                    <h2 className={styles.centerblockH2}>Треки</h2>
+                    {children}
+                    </div>
                     <Sidebar />
                 </main>
                 <BarPlayer />

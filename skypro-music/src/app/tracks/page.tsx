@@ -19,8 +19,11 @@ export default function MainTrackspage() {
             setTracks(data)
             dispatch(setInitialTracks({ initialTracks: data }))
         })
+            .catch((error: any) => {
+                throw new Error(error.message)
+            })
     }, [dispatch])
 
 
-    return <Centerblock />
+    return <Centerblock tracks={filteredTracks} />
 }

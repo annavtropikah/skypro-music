@@ -12,24 +12,24 @@ import { useEffect, useState } from "react";
 
 
 
-export default function Centerblock() {
+export default function Centerblock({ tracks }: { tracks: trackType[] }) {
 
-  const dispatch = useAppDispatch()
-  const [tracks, setTracks] = useState<trackType[]>([])
-  const filteredTracks=useAppSelector((state) => state.playlist.filteredTracks);
+  // const dispatch = useAppDispatch()
+  // const [tracks, setTracks] = useState<trackType[]>([])
+  // const filteredTracks=useAppSelector((state) => state.playlist.filteredTracks);
 
-  useEffect( () => {
-     getTracks().then((data)=>{
-      setTracks(data)
-      dispatch(setInitialTracks({ initialTracks: data }))
-     })
-  }, [dispatch])
+  // useEffect( () => {
+  //    getTracks().then((data)=>{
+  //     setTracks(data)
+  //     dispatch(setInitialTracks({ initialTracks: data }))
+  //    })
+  // }, [dispatch])
 
   return (
-    <div className={styles.mainCenterblock}>
-      <Search />
-      <h2 className={styles.centerblockH2}>Треки</h2>
-      <Filters  />
+    <div >
+     
+      
+      <Filters />
       <div className={styles.centerblockContent}>
         <div className={styles.contentTitle}>
           <div className={classNames(styles.playlistTitleCol, styles.col01)}>Трек</div>
@@ -43,14 +43,16 @@ export default function Centerblock() {
         </div>
 
         <div className={styles.contentPlaylist}>
-          
-          {filteredTracks.map((trackData) => (
+          {tracks.length === 0 ? "no results found" : ""}
+          {tracks.map((trackData) => (
             <Track
 
               key={trackData.id}
               trackData={trackData}
 
             />
+
+
           ))}
 
         </div>
