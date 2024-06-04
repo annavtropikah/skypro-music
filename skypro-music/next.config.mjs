@@ -4,7 +4,7 @@ const nextConfig = {
         return [
           {
             source: '/',
-            destination: '/tracks', // Matched parameters can be used in the destination
+            destination: '/tracks',
             permanent: true,
           },
         ]
