@@ -5,7 +5,7 @@ import Centerblock from "@/components/Centerblock/Centerblock"
 
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { useEffect, useState } from "react";
-import { getTracks } from "@/api/track";
+import { getTracks } from "@/api/tracks";
 import { setInitialTracks } from "@/store/features/playListSlice";
 import { trackType } from "@/types";
 

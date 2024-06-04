@@ -4,7 +4,7 @@ import styles from "./Centerblock.module.css"
 import classNames from 'classnames'
 import Filters from "../Filters/Filters";
 import Search from "../Search/Search";
-import { getTracks } from "@/api/track";
+import { getTracks } from "@/api/tracks";
 import { trackType } from "@/types";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { setInitialTracks } from "@/store/features/playListSlice";
@@ -27,8 +27,8 @@ export default function Centerblock({ tracks }: { tracks: trackType[] }) {
 
   return (
     <div >
-     
-      
+
+
       <Filters />
       <div className={styles.centerblockContent}>
         <div className={styles.contentTitle}>
@@ -43,8 +43,8 @@ export default function Centerblock({ tracks }: { tracks: trackType[] }) {
         </div>
 
         <div className={styles.contentPlaylist}>
-          {tracks.length === 0 ? "no results found" : ""}
-          {tracks.map((trackData) => (
+          {tracks?.length === 0 ? "no results found" : ""}
+          {tracks?.map((trackData) => (
             <Track
 
               key={trackData.id}

@@ -1,4 +1,4 @@
-import { getPlaylistTracks } from "@/api/track"
+import { getPlaylistTracks } from "@/api/tracks"
 
 
 
