@@ -27,14 +27,14 @@ function Nav() {
       {isOpened && (<div className={styles.navMenu}>
           <ul className={styles.menuList}>
             <li className={styles.menuItem}>
-              <a href="#" className={styles.menuLink}>
+              <Link href="/" className={styles.menuLink}>
                 Главное
-              </a>
+              </Link>
             </li>
             <li className={styles.menuItem}>
-              <a href="#" className={styles.menuLink}>
+              <Link href="/tracks/favourite" className={styles.menuLink}>
                 Мой плейлист
-              </a>
+              </Link>
             </li>
             <li className={styles.menuItem}>
               <Link href="/signin" className={styles.menuLink}>

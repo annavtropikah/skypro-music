@@ -1,4 +1,4 @@
-import { getPlaylistTracks } from "@/api/tracks"
+import {getCategoryPlaylistTracks } from "@/api/tracks"
 import Centerblock from "@/components/Centerblock/Centerblock"
 
 import styles from "../../layout.module.css";
@@ -11,29 +11,32 @@ type CategoryType = {
 }
 
 export default async function CategotyPage({ params }: CategoryType) {
-    const tracksData = await getPlaylistTracks(params.id)
+
+    const tracksData = await getCategoryPlaylistTracks(params.id)
+
     let playlistTitle
     switch (params.id) {
         case "1":
-            playlistTitle = "Плейлист дня";
-            break;
+            playlistTitle = "Плейлист дня"
+            break
         case "2":
-            playlistTitle = "100 танцевальных хитов";
-            break;
+            playlistTitle = "100 танцевальных хитов"
+            break
         case "3":
-            playlistTitle = "Инди заряд";
+            playlistTitle = "Инди заряд"
             break;
         case "liked":
-            playlistTitle = "Мой плейлист";
-            break;
+            playlistTitle = "Мой плейлист"
+            break
         default:
-            playlistTitle = "Треки";
-            break;
+            playlistTitle = ""
+            break
     }
+
     return (
         <>
             <h2 className={styles.centerblockH2}>{playlistTitle}</h2>
-            <Centerblock tracks={tracksData} />
+            <Centerblock tracks={tracksData} isLoading={false} />
         </>
     )
 }

@@ -141,31 +141,31 @@ export default function BarPlayer() {
                                     <div onClick={handlePrevTrack}
                                         className={classNames(styles.playerBtnPrev, styles.btn)}>
                                         <svg className={styles.playerBtnPrevSvg}>
-                                            <use xlinkHref="img/icon/sprite.svg#icon-prev" />
+                                            <use xlinkHref="/img/icon/sprite.svg#icon-prev" />
                                         </svg>
                                     </div>
                                     <div onClick={togglePlay} className={classNames(styles.playerBtnPlay, styles.btn)}>
                                         <svg className={styles.playerBtnPlaySvg}>
-                                            <use xlinkHref={`img/icon/sprite.svg#${isTrackPlaying ? "icon-pause" : "icon-play"}`} />
+                                            <use xlinkHref={`/img/icon/sprite.svg#${isTrackPlaying ? "icon-pause" : "icon-play"}`} />
                                         </svg>
                                     </div>
                                     <div onClick={handleNextTrack}
                                         className={classNames(styles.playerBtnNext, styles.btn)}>
                                         <svg className={styles.playerBtnNextSvg}>
-                                            <use xlinkHref="img/icon/sprite.svg#icon-next" />
+                                            <use xlinkHref="/img/icon/sprite.svg#icon-next" />
                                         </svg>
                                     </div>
                                     <div onClick={toggleLoop} className={classNames(styles.playerBtnRepeat, styles.btnIcon)}>
                                         <svg className={styles.playerBtnRepeatSvg}>
-                                            <use xlinkHref={`img/icon/sprite.svg#${isLoop ? "icon-repeat-active" : "icon-repeat"}`} />
+                                            <use xlinkHref={`/img/icon/sprite.svg#${isLoop ? "icon-repeat-active" : "icon-repeat"}`} />
                                         </svg>
                                     </div>
 
                                     <div onClick={() => dispatch(setIsShuffle(!isShuffle))} className={classNames(styles.playerBtnShuffle, styles.btnIcon)}>
                                         <svg className={styles.playerBtnShuffleSvg}>
-                                            {/*<use xlinkHref="img/icon/sprite.svg#icon-shuffle" />*/}
+                                            {/*<use xlinkHref="/img/icon/sprite.svg#icon-shuffle" />*/}
 
-                                            <use xlinkHref={`img/icon/sprite.svg#${isShuffle ? "icon-shuffle-active" : "icon-shuffle"}`} />
+                                            <use xlinkHref={`/img/icon/sprite.svg#${isShuffle ? "icon-shuffle-active" : "icon-shuffle"}`} />
                                         </svg>
                                     </div>
                                 </div>
@@ -173,7 +173,7 @@ export default function BarPlayer() {
                                     <div className={styles.trackPlayContain}>
                                         <div className={styles.trackPlayImage}>
                                             <svg className={styles.trackPlaySvg}>
-                                                <use xlinkHref="img/icon/sprite.svg#icon-note" />
+                                                <use xlinkHref="/img/icon/sprite.svg#icon-note" />
                                             </svg>
                                         </div>
                                         <div className={styles.trackPlayAuthor}>
@@ -190,12 +190,12 @@ export default function BarPlayer() {
                                     <div className={styles.trackPlayLikeDis}>
                                         <div className={classNames(styles.trackPlayLike, styles.btnIcon)}>
                                             <svg className={styles.trackPlayLikeSvg}>
-                                                <use xlinkHref="img/icon/sprite.svg#icon-like" />
+                                                <use xlinkHref="/img/icon/sprite.svg#icon-like" />
                                             </svg>
                                         </div>
                                         <div className={classNames(styles.trackPlayDislike, styles.btnIcon)}>
                                             <svg className={styles.trackPlayDislikeSvg}>
-                                                <use xlinkHref="img/icon/sprite.svg#icon-dislike" />
+                                                <use xlinkHref="/img/icon/sprite.svg#icon-dislike" />
                                             </svg>
                                         </div>
                                     </div>

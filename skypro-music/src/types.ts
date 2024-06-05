@@ -20,17 +20,3 @@ export type trackType = {
     stared_user: userType[],
 }
 
-export type UserStoreType = {
-    user: {
-      id: number;
-      username: string;
-      first_name: string;
-      last_name: string;
-      email: string;
-    };
-    login: (
-      newUser: number,
-      loginData: { email: string; password: string }
-    ) => void;
-    logout: () => void;
-  }
