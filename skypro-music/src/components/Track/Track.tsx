@@ -4,7 +4,7 @@ import styles from "./Track.module.css"
 import { useAppDispatch, useAppSelector } from "@/components/hooks";
 import { trackType } from "@/types";
 import { setCurrentTrack, setIsTrackPlaying } from "@/store/features/playListSlice";
-import { formatSecondsToMMSS } from "@/utils";
+import { formatSecondsToMMSS } from "@/app/lib/formatSecondsToMMSS";
 
 export type TrackType = {
   trackData: trackType,
