@@ -10,6 +10,7 @@ function Nav() {
 
   return (
     <nav className={styles.mainNav}>
+      <Link href="/">
       <div className={styles.navLogo}>
         <Image
           alt="логотип skypro-music"
@@ -19,6 +20,7 @@ function Nav() {
           src="/img/logo.png"
         />
       </div>
+      </Link>
       <div onClick={() => setIsOpend((prev) => !prev)} className={styles.navBurger}>
         <span className={styles.burgerLine} />
         <span className={styles.burgerLine} />
