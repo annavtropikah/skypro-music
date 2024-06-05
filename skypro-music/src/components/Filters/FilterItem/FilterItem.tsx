@@ -2,7 +2,7 @@ import classNames from "classnames"
 import styles from "./FilterItem.module.css"
 import { trackType } from "@/types"
 import { order } from "../data"
-import { useAppDispatch, useAppSelector } from "@/hooks/hooks"
+import { useAppDispatch, useAppSelector } from "@/components/hooks"
 import { setFilters } from "@/store/features/playListSlice"
 import { useEffect, useMemo, useState } from "react"
 

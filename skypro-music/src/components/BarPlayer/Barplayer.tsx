@@ -5,7 +5,7 @@ import classNames from 'classnames'
 
 import ProgressBar from "../ProgressBar/ProgressBar"
 import Volume from "../Volume/Volume"
-import { useAppDispatch, useAppSelector } from "@/hooks/hooks"
+import { useAppDispatch, useAppSelector } from "@/components/hooks"
 
 import { setIsShuffle, setNextTrack, setPrevTrack, setIsTrackPlaying, setCurrentTrackIndex } from "@/store/features/playListSlice";
 import { formatSecondsToMMSS } from "@/utils";

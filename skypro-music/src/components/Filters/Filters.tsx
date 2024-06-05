@@ -4,7 +4,7 @@ import FilterItem from "./FilterItem/FilterItem"
 import styles from "./Filters.module.css"
 import { filters } from "./data"
 
-import { useAppSelector } from "@/hooks/hooks"
+import { useAppSelector } from "@/components/hooks"
 
 
 export default function Filters() {

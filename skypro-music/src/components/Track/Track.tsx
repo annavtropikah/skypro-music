@@ -1,7 +1,7 @@
 "use client"
 import classNames from "classnames"
 import styles from "./Track.module.css"
-import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/components/hooks";
 import { trackType } from "@/types";
 import { setCurrentTrack, setIsTrackPlaying } from "@/store/features/playListSlice";
 import { formatSecondsToMMSS } from "@/utils";

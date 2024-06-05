@@ -6,7 +6,7 @@ import Filters from "../Filters/Filters";
 import Search from "../Search/Search";
 import { getTracks } from "@/api/tracks";
 import { trackType } from "@/types";
-import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "@/components/hooks";
 import { setInitialTracks } from "@/store/features/playListSlice";
 import { memo, useEffect, useState } from "react";
 
