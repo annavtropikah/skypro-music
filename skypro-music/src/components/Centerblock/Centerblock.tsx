@@ -15,13 +15,17 @@ function Centerblock() {
 
   const dispatch = useAppDispatch()
   const [tracks, setTracks] = useState<trackType[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+
   const filteredTracks = useAppSelector((state) => state.playlist.filteredTracks);
 
   useEffect(() => {
+    setIsLoading(true)
     getTracks().then((data) => {
       setTracks(data)
       dispatch(setInitialTracks({ initialTracks: data }))
       console.log(data)
+      setIsLoading(false)
     })
 
   }, [dispatch])
@@ -44,7 +48,7 @@ function Centerblock() {
         </div>
 
         <div className={styles.contentPlaylist}>
-          {filteredTracks?.length === 0  ? 'нет треков, удовлетворяющих условиям слортировки' : ""}
+          {isLoading ? 'Ожидайте,треки загружаются' : filteredTracks?.length === 0 ? 'нет треков, удовлетворяющих условиям слортировки' : ""}
           {filteredTracks?.map((trackData) => (
             <Track
 
