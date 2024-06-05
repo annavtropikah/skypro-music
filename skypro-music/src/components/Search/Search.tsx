@@ -2,13 +2,13 @@
 import { ChangeEvent, memo, useState } from "react"
 import styles from "./Search.module.css"
 import classNames from 'classnames'
-import { useAppDispatch } from "@/hooks"
+import { useAppDispatch } from "@/hooks/hooks"
 import { setFilters } from "@/store/features/playListSlice"
 
 function Search() {
   const [searchValue, setSearchValue] = useState("")
   const dispatch = useAppDispatch()
-  const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
     dispatch(setFilters({ searchValue: e.target.value }))
   }

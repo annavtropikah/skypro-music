@@ -4,7 +4,7 @@ import FilterItem from "./FilterItem/FilterItem"
 import styles from "./Filters.module.css"
 import { filters } from "./data"
 
-import { useAppSelector } from "@/hooks"
+import { useAppSelector } from "@/hooks/hooks"
 
 
 export default function Filters() {
@@ -18,32 +18,32 @@ export default function Filters() {
   return (
     <div className={styles.centerblockFilter}>
       <div className={styles.filterTitle}>Искать по:</div>
-      
+
       <FilterItem
- 
+
         isOpen={activeFilter === filters[0].title}
         handleFilterClick={handleFilterClick}
         title={filters[0].title}
         value={filters[0].value}
-        
+
         optionList={author}
       />
-     <FilterItem
-       
+      <FilterItem
+
         isOpen={activeFilter === filters[1].title}
         handleFilterClick={handleFilterClick}
         title={filters[1].title}
         value={filters[1].value}
-        
+
         optionList={genre}
       />
-       <FilterItem
-   
+      <FilterItem
+
         isOpen={activeFilter === filters[2].title}
         handleFilterClick={handleFilterClick}
         title={filters[2].title}
         value={filters[2].value}
-        
+
         optionList={order}
       />
 

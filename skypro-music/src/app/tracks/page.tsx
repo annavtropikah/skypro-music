@@ -3,7 +3,7 @@
 
 import Centerblock from "@/components/Centerblock/Centerblock"
 
-import { useAppDispatch, useAppSelector } from "@/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { useEffect, useState } from "react";
 import { getTracks } from "@/api/tracks";
 import { setInitialTracks } from "@/store/features/playListSlice";

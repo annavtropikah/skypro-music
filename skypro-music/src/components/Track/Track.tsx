@@ -1,7 +1,7 @@
 "use client"
 import classNames from "classnames"
 import styles from "./Track.module.css"
-import { useAppDispatch, useAppSelector } from "@/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { trackType } from "@/types";
 import { setCurrentTrack, setIsTrackPlaying } from "@/store/features/playListSlice";
 import { formatSecondsToMMSS } from "@/utils";
@@ -13,7 +13,7 @@ export type TrackType = {
 
 export default function Track({ trackData }: TrackType) {
   //получаем текущий трек из store
-  const {currentTrack, isPlaying} = useAppSelector((state) => state.playlist)
+  const { currentTrack, isPlaying } = useAppSelector((state) => state.playlist)
   const tracksData = useAppSelector((state) => state.playlist.initialTracks);
 
   const { name, author, album, duration_in_seconds, id } = trackData
