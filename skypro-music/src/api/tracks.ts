@@ -9,7 +9,6 @@ const refreshTokenUrl = 'https://skypro-music-api.skyeng.tech/user/token/refresh
 
 
 //ПОЛУЧИТЬ СПИСОК ТРЕКОВ
-
 export async function getTracks() {
   const res = await fetch(allUrl, {
     method: "GET",
@@ -39,7 +38,7 @@ export async function getCategoryPlaylistTracks(id: string) {
 
 
 export async function addFavoriteTracks(id: number, token: string) {
-  const res = await fetch(trackUrl+ id + "/favorite", {
+  const res = await fetch(trackUrl + id + "/favorite/", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -118,7 +117,7 @@ if (response.status === 400) {
 if (response.status === 500) {
   throw new Error("Сервер сломался");
 }
-if (response.status===401){
+if (response.status === 401){
   throw new Error("Пользователь с таким email или паролем не найден");
 }
 return response.json()
@@ -126,7 +125,6 @@ return response.json()
 
 
 //ОБНОВИТЬ TOKEN
-
 export async function refreshToken(token: string) {
   const res = await fetch(refreshTokenUrl, {
     method: "POST",
@@ -138,6 +136,7 @@ export async function refreshToken(token: string) {
       "content-type": "application/json",
     },
   });
+
   if (!res.ok) {
     throw new Error("Ошибка при получении данных");
   }

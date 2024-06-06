@@ -13,6 +13,14 @@ export type UserStateType = {
 
 }
 
+export const DEFAULT_USER = {
+  id: null,
+  username: '',
+  first_name: '',
+  last_name: '',
+  email: '',
+}
+
 // первоначальное состояние
 const initialState: UserStateType = {
   user: {
@@ -39,6 +47,7 @@ const userSlice = createSlice({
       state.user = action.payload
     },
     setToken: (state, action: PayloadAction<tokenType>) => {
+      console.log(action.payload);
       state.tokens = action.payload
     },
   }

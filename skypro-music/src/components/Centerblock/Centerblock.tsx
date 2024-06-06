@@ -16,9 +16,9 @@ function Centerblock({ tracks, isLoading }: { tracks: trackType[], isLoading: bo
 
   return (
     <div >
-      
 
-      
+
+
       <div className={styles.centerblockContent}>
         <div className={styles.contentTitle}>
           <div className={classNames(styles.playlistTitleCol, styles.col01)}>Трек</div>
@@ -35,10 +35,8 @@ function Centerblock({ tracks, isLoading }: { tracks: trackType[], isLoading: bo
           {isLoading ? 'Ожидайте,треки загружаются' : tracks?.length === 0 ? "нет треков, удовлетворяющих условиям слортировки" : ""}
           {tracks?.map((trackData) => (
             <Track
-
               key={trackData.id}
               trackData={trackData}
-
             />
 
 

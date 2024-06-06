@@ -13,19 +13,16 @@ import Filters from "@/components/Filters/Filters";
 
 export default function MainTrackspage() {
     const dispatch = useAppDispatch()
-    const [tracks, setTracks] = useState<trackType[]>([])
     const filteredTracks = useAppSelector((state) => state.playlist.filteredTracks);
     const [isLoading, setIsLoading] = useState<boolean>(true)
 
     useEffect(() => {
       setIsLoading(true)
       getTracks().then((data) => {
-        setTracks(data)
         dispatch(setInitialTracks({ initialTracks: data }))
         console.log(data)
         setIsLoading(false)
       })
-  
     }, [dispatch])
 
 

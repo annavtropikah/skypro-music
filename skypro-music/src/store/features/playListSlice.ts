@@ -57,7 +57,6 @@ const playListSlice = createSlice({
         },
         setLikedTracks:(state, action: PayloadAction<{ likedTracks: trackType[] }>) => {
             state.likedTrackes = action.payload.likedTracks
-        
         },
         setCurrentTrack: (state, action: PayloadAction<{ trackData: trackType, tracksData: trackType[] }>) => {
             state.currentTrack = action.payload.trackData;
@@ -121,8 +120,8 @@ const playListSlice = createSlice({
                 const hasGenres = state.filretOptions.genre.length !== 0
                 const isGenre = hasGenres ? state.filretOptions.genre.includes(track.genre) : true
 
-                const hasSearchValue = 
-                track.name.toLowerCase().includes(state.filretOptions.searchValue.toLowerCase()) || 
+                const hasSearchValue =
+                track.name.toLowerCase().includes(state.filretOptions.searchValue.toLowerCase()) ||
                 track.author.toLowerCase().includes(state.filretOptions.searchValue.toLowerCase())
                 return isAuthors && isGenre && hasSearchValue
             })

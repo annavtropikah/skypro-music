@@ -27,7 +27,6 @@ export default function Track({ trackData }: TrackType) {
   }
 
 
-
   return (
     <div onClick={handleTrackClick}
       className={styles.playlistItem}>

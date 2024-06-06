@@ -1,5 +1,5 @@
 'use client'
-import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react"
+import {ChangeEvent, useCallback, useEffect, useMemo, useRef, useState} from "react"
 import styles from "./BarPlayer.module.css"
 import classNames from 'classnames'
 
@@ -7,8 +7,17 @@ import ProgressBar from "../ProgressBar/ProgressBar"
 import Volume from "../Volume/Volume"
 import { useAppDispatch, useAppSelector } from "@/components/hooks"
 
-import { setIsShuffle, setNextTrack, setPrevTrack, setIsTrackPlaying, setCurrentTrackIndex } from "@/store/features/playListSlice";
+import {
+    setIsShuffle,
+    setNextTrack,
+    setPrevTrack,
+    setIsTrackPlaying,
+    setCurrentTrackIndex,
+    setLikedTracks
+} from "@/store/features/playListSlice";
 import { formatSecondsToMMSS } from "@/app/lib/formatSecondsToMMSS";
+import { addFavoriteTracks, deleteFavoriteTracks } from "@/api/tracks";
+import {trackType} from "@/types";
 
 
 export default function BarPlayer() {
@@ -24,6 +33,9 @@ export default function BarPlayer() {
 
     const isEnd = useAppSelector((state) => state.playlist.isEnd);
     const playlist = useAppSelector((state) => state.playlist.playlist)
+
+    const tokens = useAppSelector((state) => state.user.tokens)
+    const likedTracks = useAppSelector(state => state.playlist.likedTrackes);
 
     // использование useRef для доступа а audio
     const audioRef = useRef<null | HTMLAudioElement>(null)
@@ -57,6 +69,10 @@ export default function BarPlayer() {
     }
 
     const [volume, setVolume] = useState<number>(0.1);
+
+    const isAlreadyLicked = useMemo(() => {
+        return currentTrack ? likedTracks.filter((track) => track.id === currentTrack.id).length : false;
+    }, [currentTrack, likedTracks])
 
     useEffect(() => {
         if (audioRef.current) {
@@ -116,6 +132,39 @@ export default function BarPlayer() {
     }, [currentTrackIndex, handleEnded]);
 
     // //NEW
+
+    const handleLikeTrack = () => {
+        if (!currentTrack?.id) {
+            return;
+        }
+
+        if (isAlreadyLicked) {
+            return;
+        }
+
+        addFavoriteTracks(currentTrack.id, tokens.access).then(() => {
+            dispatch(setLikedTracks({ likedTracks: [...likedTracks, currentTrack] }))
+        }).catch(() => {
+            // TODO: сделать проверку токена и отправлять refresh, как делали в getFavoriteTracks
+        })
+    }
+
+    const handleDislikeTrack = () => {
+        if (!currentTrack?.id) {
+            return;
+        }
+
+        if (!isAlreadyLicked) {
+            return;
+        }
+
+        deleteFavoriteTracks(currentTrack.id, tokens.access).then(() => {
+            const newLickedTracks = likedTracks.filter((track) => track.id !== currentTrack.id);
+            dispatch(setLikedTracks({ likedTracks: newLickedTracks }))
+        }).catch(() => {
+            // TODO: сделать проверку токена и отправлять refresh, как делали в getFavoriteTracks
+        })
+    }
 
     return (
         <>
@@ -188,12 +237,13 @@ export default function BarPlayer() {
                                         </div>
                                     </div>
                                     <div className={styles.trackPlayLikeDis}>
-                                        <div className={classNames(styles.trackPlayLike, styles.btnIcon)}>
-                                            <svg className={styles.trackPlayLikeSvg}>
+                                        <div className={classNames(styles.trackPlayLike, styles.btnIcon)} onClick={handleLikeTrack}>
+                                            <svg className={styles.trackPlayLikeSvgActive}>
+                                                {/* TODO: меняем иконку по значению isAlreadyLiked */}
                                                 <use xlinkHref="/img/icon/sprite.svg#icon-like" />
                                             </svg>
                                         </div>
-                                        <div className={classNames(styles.trackPlayDislike, styles.btnIcon)}>
+                                        <div className={classNames(styles.trackPlayDislike, styles.btnIcon)} onClick={handleDislikeTrack}>
                                             <svg className={styles.trackPlayDislikeSvg}>
                                                 <use xlinkHref="/img/icon/sprite.svg#icon-dislike" />
                                             </svg>

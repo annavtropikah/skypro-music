@@ -8,7 +8,8 @@ import classNames from "classnames"
 import { ChangeEvent, useState } from "react";
 import { signupApi } from "@/api/users";
 import { useAppDispatch } from "@/components/hooks";
-import { setUser } from "@/store/features/userSlice";
+import {setToken, setUser} from "@/store/features/userSlice";
+import {getToken} from "@/api/tracks";
 
 
 export default function SignUpPage() {
@@ -18,7 +19,7 @@ export default function SignUpPage() {
         password: "",
         username: "",
       });
-    
+
 
 
       const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -33,18 +34,17 @@ export default function SignUpPage() {
       const handleRegister = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         signupApi(loginData).then((data) => {
-            return dispatch(setUser(data))
-        })
-        .then((data)=>{
-            // dispatch(setToken(data))
+            dispatch(setUser(data))
+
+            getToken(loginData).then(tokensData => {
+                dispatch(setToken(tokensData))
+            })
         })
       };
 
 
-
-
     return (
-    
+
         <div className={styles.wrapper}>
             <div className={styles.containerSignup}>
                 <div className={styles.modalBlock}>

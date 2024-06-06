@@ -2,11 +2,8 @@ import { Router } from "next/router";
 
 const signupUrl = 'https://skypro-music-api.skyeng.tech/user/signup/'
 const signinUrl = 'https://skypro-music-api.skyeng.tech/user/login/'
-const tokenUrl = 'https://skypro-music-api.skyeng.tech/user/token/'
-const refreshTokenUrl ='https://skypro-music-api.skyeng.tech/user/token/refresh/'
 
 //ЗАРЕГИСТРИРОВАТЬСЯ
-
 export async function signupApi({
   email,
   password,
@@ -31,7 +28,7 @@ export async function signupApi({
   if (response.status === 400) {
     alert("Такой пользователь уже существует");
     //переадресация на стр регстр!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    
+
   }
   if (response.status === 500) {
     alert("Сервер сломался");
