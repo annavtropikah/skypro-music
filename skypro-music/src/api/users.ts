@@ -1,3 +1,4 @@
+import { Router } from "next/router";
 
 const signupUrl = 'https://skypro-music-api.skyeng.tech/user/signup/'
 const signinUrl = 'https://skypro-music-api.skyeng.tech/user/login/'
@@ -28,10 +29,12 @@ export async function signupApi({
     },
   });
   if (response.status === 400) {
-    throw new Error("Такой пользователь уже существует");
+    alert("Такой пользователь уже существует");
+    //переадресация на стр регстр!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
   }
   if (response.status === 500) {
-    throw new Error("Сервер сломался");
+    alert("Сервер сломался");
   }
 
 

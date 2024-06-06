@@ -1,11 +1,14 @@
 
-import { userType } from "@/types";
+import { tokenType, userType } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 export type UserStateType = {
   user: userType
-
+  tokens: {
+    refresh: string,
+    access: string,
+  }
 
 
 }
@@ -14,18 +17,16 @@ export type UserStateType = {
 const initialState: UserStateType = {
   user: {
     id: null,
-    username: "",
-    first_name: "",
-    last_name: "",
-    email: "",
-
+    username: '',
+    first_name: '',
+    last_name: '',
+    email: '',
   },
-  // tokens:{
-  //  accesstoken
-  //  refreshtoken
-  // }
 
-
+  tokens: {
+    refresh: '',
+    access: '',
+  }
 }
 
 
@@ -36,9 +37,15 @@ const userSlice = createSlice({
   reducers: {
     setUser: (state, action: PayloadAction<userType>) => {
       state.user = action.payload
-    }
+    },
+    setToken: (state, action: PayloadAction<tokenType>) => {
+      state.tokens = action.payload
+    },
   }
 })
 
-export const{setUser}=userSlice.actions
-export const userReducer=userSlice.reducer
+
+export const userReducer = userSlice.reducer
+
+export const { setUser } = userSlice.actions
+export const { setToken } = userSlice.actions

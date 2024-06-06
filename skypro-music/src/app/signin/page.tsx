@@ -6,7 +6,7 @@ import classNames from "classnames"
 import { ChangeEvent, useState } from "react";
 import { signinApi } from "@/api/users";
 import { useAppDispatch } from "@/components/hooks";
-import { setUser } from "@/store/features/userSlice";
+import { setToken, setUser } from "@/store/features/userSlice";
 
 
 export default function SignInPage() {
@@ -30,9 +30,9 @@ export default function SignInPage() {
          return dispatch(setUser(data))
         
         })
-        .then(()=>{
-            //сделать получение токена
-        });
+        .then((data)=>{
+            // dispatch(setToken(data))
+        })
       };
     return (
         <div className={styles.wrapper}>

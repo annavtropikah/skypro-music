@@ -7,15 +7,18 @@ import styles from "./page.module.css";
 import classNames from "classnames"
 import { ChangeEvent, useState } from "react";
 import { signupApi } from "@/api/users";
+import { useAppDispatch } from "@/components/hooks";
+import { setUser } from "@/store/features/userSlice";
 
 
 export default function SignUpPage() {
+    const dispatch = useAppDispatch()
     const [loginData, setLoginData] = useState({
         email: "",
         password: "",
         username: "",
       });
-    //   const { login } =???
+    
 
 
       const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -29,9 +32,12 @@ export default function SignUpPage() {
 
       const handleRegister = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        signupApi(loginData).then(() => {
-        //   login()
-        });
+        signupApi(loginData).then((data) => {
+            return dispatch(setUser(data))
+        })
+        .then((data)=>{
+            // dispatch(setToken(data))
+        })
       };
 
 
@@ -50,9 +56,9 @@ export default function SignUpPage() {
                         </Link>
                         <input
                             className={classNames(styles.modalInput, styles.login)}
-                            type="text"
-                            name="login"
-                            placeholder="Логин"
+                            type="email"
+                            name="email"
+                            placeholder="Почта"
                             onChange={handleInputChange}
                         />
                         <input
@@ -64,9 +70,9 @@ export default function SignUpPage() {
                         />
                         <input
                             className={styles.modalInput}
-                            type="password"
-                            name="password"
-                            placeholder="Повторите пароль"
+                            type="text"
+                            name="username"
+                            placeholder="Имя пользователя"
                             onChange={handleInputChange}
                         />
                         <button  onClick={handleRegister} className={styles.modalBtnSignupEnt}>

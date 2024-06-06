@@ -1,4 +1,5 @@
 'use client'
+import Link from "next/link";
 import { useAppSelector } from "../hooks";
 import styles from "./User.module.css";
 
@@ -11,9 +12,11 @@ export default function User() {
         <div className={styles.sidebarPersonal}>
             <p className={styles.sidebarPersonalname}>{user.username}</p>
             <div className={styles.sidebarIcon}>
+                <Link href="/signin">
                 <svg>
                     <use xlinkHref="/img/icon/sprite.svg#logout" />
                 </svg>
+                </Link>
             </div>
         </div>
     )

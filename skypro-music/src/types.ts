@@ -20,3 +20,8 @@ export type trackType = {
     stared_user: userType[],
 }
 
+export type tokenType={
+    refresh: string,
+    access: string,
+}
+

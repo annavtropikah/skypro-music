@@ -21,6 +21,7 @@ type PlayListStateType = {
     },
     filteredTracks: trackType[],
     initialTracks: trackType[],
+    likedTrackes:trackType[],
 }
 
 //первоначальное состояние
@@ -42,6 +43,7 @@ const initialState: PlayListStateType = {
     },
     filteredTracks: [], // трэки по выбранному фильтру
     initialTracks: [], // все трэки
+    likedTrackes:[],
 };
 
 const playListSlice = createSlice({
@@ -52,6 +54,10 @@ const playListSlice = createSlice({
             state.initialTracks = action.payload.initialTracks
             state.filteredTracks = action.payload.initialTracks
             state.playlist = action.payload.initialTracks
+        },
+        setLikedTracks:(state, action: PayloadAction<{ likedTracks: trackType[] }>) => {
+            state.likedTrackes = action.payload.likedTracks
+        
         },
         setCurrentTrack: (state, action: PayloadAction<{ trackData: trackType, tracksData: trackType[] }>) => {
             state.currentTrack = action.payload.trackData;
@@ -155,6 +161,8 @@ const playListSlice = createSlice({
         export const { setFilters } = playListSlice.actions;
         export const { setInitialTracks } = playListSlice.actions;
         export const { setCurrentTrackIndex } = playListSlice.actions;
+        export const { setLikedTracks } = playListSlice.actions;
+
 
 
 
