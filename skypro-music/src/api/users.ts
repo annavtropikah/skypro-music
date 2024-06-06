@@ -6,7 +6,7 @@ const refreshTokenUrl ='https://skypro-music-api.skyeng.tech/user/token/refresh/
 
 //ЗАРЕГИСТРИРОВАТЬСЯ
 
-export async function signupUser({
+export async function signupApi({
   email,
   password,
   username,
@@ -44,7 +44,7 @@ export async function signupUser({
 //ВОЙТИ
 
 
-export async function signin({
+export async function signinApi({
   email,
   password,
 }: {
@@ -77,42 +77,6 @@ export async function signin({
 
 
 
-//ПОЛУЧИТЬ  TOKEN
 
-export async function getToken({
-  email,
-  password,
-}: {
-  email: string;
-  password: string;
-}) {
-  const response = await fetch(tokenUrl, {
-  method: "POST",
-  body: JSON.stringify({
-    email,
-    password,
-  }),
-  headers: {
-    // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
-    "content-type": "application/json",
-  },
-})
-if (response.status === 400) {
-  throw new Error("Неверный логин или пароль");
-}
-if (response.status === 500) {
-  throw new Error("Сервер сломался");
-}
-if (response.status===401){
-  throw new Error("Пользователь с таким email или паролем не найден");
-}
-return response.json()
-}
-
-
-
-
-
-//ОБНОВИТЬ TOKEN
 
 

@@ -6,7 +6,8 @@ import Link from "next/link";
 import styles from "./page.module.css";
 import classNames from "classnames"
 import { ChangeEvent, useState } from "react";
-import { signupUser } from "@/api/users";
+import { signupApi } from "@/api/users";
+
 
 export default function SignUpPage() {
     const [loginData, setLoginData] = useState({
@@ -14,6 +15,9 @@ export default function SignUpPage() {
         password: "",
         username: "",
       });
+    //   const { login } =???
+
+
       const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setLoginData({
@@ -23,12 +27,12 @@ export default function SignUpPage() {
       };
 
 
-    //   const handleRegister = (e: React.MouseEvent<HTMLButtonElement>) => {
-    //     e.preventDefault();
-    //     signupUser(loginData).then((data) => {
-    //       login(data, loginData);
-    //     });
-    //   };
+      const handleRegister = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        signupApi(loginData).then(() => {
+        //   login()
+        });
+      };
 
 
 
@@ -49,20 +53,23 @@ export default function SignUpPage() {
                             type="text"
                             name="login"
                             placeholder="Логин"
+                            onChange={handleInputChange}
                         />
                         <input
                             className={styles.modalInput}
                             type="password"
                             name="password"
                             placeholder="Пароль"
+                            onChange={handleInputChange}
                         />
                         <input
                             className={styles.modalInput}
                             type="password"
                             name="password"
                             placeholder="Повторите пароль"
+                            onChange={handleInputChange}
                         />
-                        <button className={styles.modalBtnSignupEnt}>
+                        <button  onClick={handleRegister} className={styles.modalBtnSignupEnt}>
                             <Link href="/">Зарегистрироваться</Link>
                         </button>
                     </form>

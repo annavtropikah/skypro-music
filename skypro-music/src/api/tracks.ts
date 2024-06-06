@@ -92,25 +92,36 @@ export async function getFavoriteTracks(token: string) {
 
 
 
+//ПОЛУЧИТЬ  TOKEN
 
-// ПОЛУЧИТЬ TOKEN
-
-export async function getToken({ email, password }: any) {
-  const res = await fetch(tokenUrl, {
-    method: "POST",
-    body: JSON.stringify({
-      email,
-      password,
-    }),
-    headers: {
-      // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
-      "content-type": "application/json",
-    },
-  });
-  if (!res.ok) {
-    throw new Error("Ошибка при получении данных");
-  }
-  return res.json();
+export async function getToken({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
+  const response = await fetch(tokenUrl, {
+  method: "POST",
+  body: JSON.stringify({
+    email,
+    password,
+  }),
+  headers: {
+    // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
+    "content-type": "application/json",
+  },
+})
+if (response.status === 400) {
+  throw new Error("Неверный логин или пароль");
+}
+if (response.status === 500) {
+  throw new Error("Сервер сломался");
+}
+if (response.status===401){
+  throw new Error("Пользователь с таким email или паролем не найден");
+}
+return response.json()
 }
 
 
