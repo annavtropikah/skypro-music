@@ -1,7 +1,7 @@
 
-type userType={
-    id: 14,
-    username: number,
+export type userType={
+    id: number | null,
+    username: string,
     first_name: string,
     last_name: string,
     email: string, 

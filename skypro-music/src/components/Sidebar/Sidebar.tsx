@@ -2,18 +2,12 @@ import { memo } from "react";
 import Link from "next/link";
 import styles from "./Sidebar.module.css"
 import Image from "next/image";
+import User from "../User/User";
 
 function Sidebar() {
   return (
     <div className={styles.mainSidebar}>
-      <div className={styles.sidebarPersonal}>
-        <p className={styles.sidebarPersonalname}>Sergey.Ivanov</p>
-        <div className={styles.sidebarIcon}>
-          <svg>
-            <use xlinkHref="/img/icon/sprite.svg#logout" />
-          </svg>
-        </div>
-      </div>
+     <User/>
       <div className={styles.sidebarBlock}>
         <div className={styles.sidebarList}>
           <div className={styles.sidebarItem}>

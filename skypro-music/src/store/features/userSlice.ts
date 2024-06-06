@@ -1,35 +1,44 @@
 
+import { userType } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 export type UserStateType = {
-    user: {
-      id: number | null,
-      username: string,
-      first_name: string,
-      last_name: string,
-      email: string,
-    },
-    login: (
-      newUser: number,
-      loginData: { email: string; password: string }
-    ) => void;
-    logout: () => void,
+  user: userType
+
+
+
+}
+
+// первоначальное состояние
+const initialState: UserStateType = {
+  user: {
+    id: null,
+    username: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+
+  },
+  // tokens:{
+  //  accesstoken
+  //  refreshtoken
+  // }
+
+
+}
+
+
+
+const userSlice = createSlice({
+  name: "user",
+  initialState,
+  reducers: {
+    setUser: (state, action: PayloadAction<userType>) => {
+      state.user = action.payload
+    }
   }
+})
 
-  //первоначальное состояние
-// const initialUserState: UserStateType = {
-//     user: {
-//         id: null,
-//         username: "",
-//         first_name: "",
-//         last_name: "",
-//         email: "",
-//       },
-//       login: (
-//         newUser: number,
-//         loginData: { email: ""; password: "" }
-//       ) => void,
-//       logout: () => void,
-
-// }
+export const{setUser}=userSlice.actions
+export const userReducer=userSlice.reducer

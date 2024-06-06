@@ -5,11 +5,14 @@ import styles from "./page.module.css";
 import classNames from "classnames"
 import { ChangeEvent, useState } from "react";
 import { signinApi } from "@/api/users";
+import { useAppDispatch } from "@/components/hooks";
+import { setUser } from "@/store/features/userSlice";
 
 
 export default function SignInPage() {
+    const dispatch = useAppDispatch()
     const [loginData, setLoginData] = useState({ email: "", password: "" });
-    // const { login } = ???;
+    
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setLoginData({
@@ -19,11 +22,16 @@ export default function SignInPage() {
       };
 
 
-
+     
       const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
+        console.log(loginData);
         signinApi(loginData).then((data) => {
-         //login?
+         return dispatch(setUser(data))
+        
+        })
+        .then(()=>{
+            //сделать получение токена
         });
       };
     return (
@@ -38,15 +46,17 @@ export default function SignInPage() {
                         </Link>
                         <input
                             className={classNames(styles.modalInput, styles.login)}
-                            type="text"
-                            name="login"
+                            type="email"
+                            name="email"
                             placeholder="Почта"
+                            onChange={handleInputChange}
                         />
                         <input
                             className={classNames(styles.modalInput, styles.password)}
                             type="password"
                             name="password"
                             placeholder="Пароль"
+                            onChange={handleInputChange}
                         />
                         <button onClick={handleLogin} className={styles.modalBtnEnter}>
                             <Link href="/">Войти</Link>
