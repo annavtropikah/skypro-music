@@ -1,4 +1,5 @@
 'use client'
+
 import {ChangeEvent, useCallback, useEffect, useMemo, useRef, useState} from "react"
 import styles from "./BarPlayer.module.css"
 import classNames from 'classnames'
