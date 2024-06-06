@@ -7,12 +7,13 @@ import { ChangeEvent, useState } from "react";
 import { signinApi } from "@/api/users";
 import { useAppDispatch } from "@/components/hooks";
 import { setToken, setUser } from "@/store/features/userSlice";
+import {getToken} from "@/api/tracks";
 
 
 export default function SignInPage() {
     const dispatch = useAppDispatch()
     const [loginData, setLoginData] = useState({ email: "", password: "" });
-    
+
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setLoginData({
@@ -22,18 +23,19 @@ export default function SignInPage() {
       };
 
 
-     
+
       const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        console.log(loginData);
-        signinApi(loginData).then((data) => {
-         return dispatch(setUser(data))
-        
-        })
-        .then((data)=>{
-            // dispatch(setToken(data))
-        })
+        signinApi(loginData)
+            .then((data) => {
+                dispatch(setUser(data));
+
+                getToken(loginData).then(tokensData => {
+                    dispatch(setToken(tokensData))
+                })
+            })
       };
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.containerEnter}>
