@@ -8,21 +8,26 @@ import { getTracks } from "@/api/track";
 import { trackType } from "@/types";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { setInitialTracks } from "@/store/features/playListSlice";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 
-
-export default function Centerblock() {
+function Centerblock() {
 
   const dispatch = useAppDispatch()
   const [tracks, setTracks] = useState<trackType[]>([])
-  const filteredTracks=useAppSelector((state) => state.playlist.filteredTracks);
+  const [isLoading, setIsLoading] = useState<boolean>(true)
 
-  useEffect( () => {
-     getTracks().then((data)=>{
+  const filteredTracks = useAppSelector((state) => state.playlist.filteredTracks);
+
+  useEffect(() => {
+    setIsLoading(true)
+    getTracks().then((data) => {
       setTracks(data)
       dispatch(setInitialTracks({ initialTracks: data }))
-     })
+      console.log(data)
+      setIsLoading(false)
+    })
+
   }, [dispatch])
 
   return (
@@ -43,7 +48,8 @@ export default function Centerblock() {
         </div>
 
         <div className={styles.contentPlaylist}>
-          {filteredTracks.map((trackData) => (
+          {isLoading ? 'Ожидайте,треки загружаются' : filteredTracks?.length === 0 ? 'нет треков, удовлетворяющих условиям слортировки' : ""}
+          {filteredTracks?.map((trackData) => (
             <Track
 
               key={trackData.id}
@@ -61,3 +67,5 @@ export default function Centerblock() {
 }
 
 
+
+export default memo(Centerblock)
