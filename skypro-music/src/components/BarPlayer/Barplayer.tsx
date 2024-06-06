@@ -146,6 +146,9 @@ export default function BarPlayer() {
         if (isAlreadyLicked) {
             return;
         }
+        if(!tokens.access) {
+            alert ("необходимо авторизоватся");
+        }
 
         addFavoriteTracks(currentTrack.id, tokens.access).then(() => {
             dispatch(setLikedTracks({ likedTracks: [...likedTracks, currentTrack] }))
@@ -243,9 +246,9 @@ export default function BarPlayer() {
                                     </div>
                                     <div className={styles.trackPlayLikeDis}>
                                         <div className={classNames(styles.trackPlayLike, styles.btnIcon)} onClick={handleLikeTrack}>
-                                            <svg className={styles.trackPlayLikeSvgActive}>
-                                                {/* TODO: меняем иконку по значению isAlreadyLiked */}
-                                                <use xlinkHref="/img/icon/sprite.svg#icon-like" />
+                                            <svg className={styles.trackPlayLikeSvg}>
+                        
+                                                <use xlinkHref={`/img/icon/sprite.svg#${isAlreadyLicked ? "icon-like-active" : "icon-like"}`} />
                                             </svg>
                                         </div>
                                         <div className={classNames(styles.trackPlayDislike, styles.btnIcon)} onClick={handleDislikeTrack}>
