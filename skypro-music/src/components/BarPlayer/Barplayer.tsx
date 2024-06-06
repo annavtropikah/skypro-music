@@ -4,6 +4,7 @@ import {ChangeEvent, useCallback, useEffect, useMemo, useRef, useState} from "re
 import styles from "./BarPlayer.module.css"
 import classNames from 'classnames'
 
+
 import ProgressBar from "../ProgressBar/ProgressBar"
 import Volume from "../Volume/Volume"
 import { useAppDispatch, useAppSelector } from "@/components/hooks"
