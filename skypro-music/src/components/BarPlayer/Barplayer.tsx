@@ -132,6 +132,9 @@ export default function BarPlayer() {
         };
     }, [currentTrackIndex, handleEnded]);
 
+   
+   
+   
     // //NEW
 
     const handleLikeTrack = () => {
