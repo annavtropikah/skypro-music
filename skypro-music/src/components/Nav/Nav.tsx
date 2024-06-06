@@ -10,6 +10,7 @@ function Nav() {
 
   return (
     <nav className={styles.mainNav}>
+      <Link href="/">
       <div className={styles.navLogo}>
         <Image
           alt="логотип skypro-music"
@@ -19,6 +20,7 @@ function Nav() {
           src="/img/logo.png"
         />
       </div>
+      </Link>
       <div onClick={() => setIsOpend((prev) => !prev)} className={styles.navBurger}>
         <span className={styles.burgerLine} />
         <span className={styles.burgerLine} />
@@ -27,14 +29,14 @@ function Nav() {
       {isOpened && (<div className={styles.navMenu}>
           <ul className={styles.menuList}>
             <li className={styles.menuItem}>
-              <a href="#" className={styles.menuLink}>
+              <Link href="/" className={styles.menuLink}>
                 Главное
-              </a>
+              </Link>
             </li>
             <li className={styles.menuItem}>
-              <a href="#" className={styles.menuLink}>
+              <Link href="/tracks/favourite" className={styles.menuLink}>
                 Мой плейлист
-              </a>
+              </Link>
             </li>
             <li className={styles.menuItem}>
               <Link href="/signin" className={styles.menuLink}>

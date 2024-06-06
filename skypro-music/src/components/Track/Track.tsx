@@ -1,24 +1,23 @@
 "use client"
 import classNames from "classnames"
 import styles from "./Track.module.css"
-import { useAppDispatch, useAppSelector } from "@/hooks";
+import { useAppDispatch, useAppSelector } from "@/components/hooks";
 import { trackType } from "@/types";
 import { setCurrentTrack, setIsTrackPlaying } from "@/store/features/playListSlice";
-import { formatSecondsToMMSS } from "@/utils";
+import { formatSecondsToMMSS } from "@/app/lib/formatSecondsToMMSS";
 
-type TrackType = {
+export type TrackType = {
   trackData: trackType,
 }
 
 
 export default function Track({ trackData }: TrackType) {
   //получаем текущий трек из store
-  const {currentTrack, isPlaying} = useAppSelector((state) => state.playlist)
+  const { currentTrack, isPlaying } = useAppSelector((state) => state.playlist)
   const tracksData = useAppSelector((state) => state.playlist.initialTracks);
 
   const { name, author, album, duration_in_seconds, id } = trackData
 
-  //вывести сиреневую точечку и стилизовать оносительно изплэинг или можно класс добавить и стилизовать
   const dispatch = useAppDispatch()
   const handleTrackClick = () => {
     dispatch(setCurrentTrack({ trackData, tracksData }))
@@ -36,18 +35,6 @@ export default function Track({ trackData }: TrackType) {
         <div className={styles.trackTitle}>
           <div className={styles.trackTitleImage}>
 
-            {/* {isPlaying ?
-              (<div className={styles.playingDot}>
-        
-              </div>
-              ) : (
-                  <div>
-                    <svg className={styles.trackTitleSvg}>
-                    <use xlinkHref="img/icon/sprite.svg#icon-note" />
-                    </svg>
-                  </div>
-                )} */}
-
             {currentTrack?.id === id ? (
               isPlaying ? (
                 <div className={styles.playingDot}>
@@ -59,7 +46,7 @@ export default function Track({ trackData }: TrackType) {
             ) : (
               <div>
                 <svg className={styles.trackTitleSvg}>
-                  <use xlinkHref="img/icon/sprite.svg#icon-note" />
+                  <use xlinkHref="/img/icon/sprite.svg#icon-note" />
                 </svg>
               </div>
             )}
@@ -85,7 +72,7 @@ export default function Track({ trackData }: TrackType) {
         </div>
         <div className={classNames(styles.trackTime, styles.btnIcon)}>
           <svg className={styles.trackTimeSvg}>
-            <use xlinkHref="img/icon/sprite.svg#icon-like" />
+            <use xlinkHref="/img/icon/sprite.svg#icon-like" />
           </svg>
           <span className={styles.trackTimeText}>{formatSecondsToMMSS(duration_in_seconds)}</span>
         </div>

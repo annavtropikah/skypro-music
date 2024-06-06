@@ -1,10 +1,40 @@
+
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
 import classNames from "classnames"
+import { ChangeEvent, useState } from "react";
+import { signupUser } from "@/api/users";
 
 export default function SignUpPage() {
+    const [loginData, setLoginData] = useState({
+        email: "",
+        password: "",
+        username: "",
+      });
+      const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setLoginData({
+          ...loginData,
+          [name]: value,
+        });
+      };
+
+
+    //   const handleRegister = (e: React.MouseEvent<HTMLButtonElement>) => {
+    //     e.preventDefault();
+    //     signupUser(loginData).then((data) => {
+    //       login(data, loginData);
+    //     });
+    //   };
+
+
+
+
     return (
+    
         <div className={styles.wrapper}>
             <div className={styles.containerSignup}>
                 <div className={styles.modalBlock}>

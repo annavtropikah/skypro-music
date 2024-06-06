@@ -2,7 +2,7 @@ import classNames from "classnames"
 import styles from "./FilterItem.module.css"
 import { trackType } from "@/types"
 import { order } from "../data"
-import { useAppDispatch, useAppSelector } from "@/hooks"
+import { useAppDispatch, useAppSelector } from "@/components/hooks"
 import { setFilters } from "@/store/features/playListSlice"
 import { useEffect, useMemo, useState } from "react"
 
@@ -11,7 +11,7 @@ type FilterItemType = {
     value: "author" | "genre" | "order",
     handleFilterClick: (newFilter: string) => void,
     isOpen: boolean,
-    tracksData: trackType[],
+
     optionList: string[] | string;
 }
 
@@ -32,7 +32,7 @@ export default function FilterItem({ handleFilterClick, title, value, isOpen, op
         }
 
         return order
-    },[playlist,value])
+    }, [playlist, value])
 
 
 
@@ -70,16 +70,16 @@ export default function FilterItem({ handleFilterClick, title, value, isOpen, op
                     </div>
 
                     <div className={styles.filterResultBlock}>
-                       
-                            <ul className={styles.filterResultUl}>
-                                {filteredList.map((item) => (
-                                    <li key={item} onClick={() => toggleFilter(item)} className={classNames(styles.filterResultLi, {
-                                        [styles.filterResultLiActive]: value === "order" ? item === optionList : optionList.includes(item),
-                                    })}>
-                                        {item}
-                                    </li>
-                                ))}
-                            </ul>
+
+                        <ul className={styles.filterResultUl}>
+                            {filteredList.map((item) => (
+                                <li key={item} onClick={() => toggleFilter(item)} className={classNames(styles.filterResultLi, {
+                                    [styles.filterResultLiActive]: value === "order" ? item === optionList : optionList.includes(item),
+                                })}>
+                                    {item}
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
 

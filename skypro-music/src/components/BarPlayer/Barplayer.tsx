@@ -1,14 +1,14 @@
 'use client'
-import {ChangeEvent, useCallback, useEffect, useRef, useState} from "react"
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react"
 import styles from "./BarPlayer.module.css"
 import classNames from 'classnames'
 
 import ProgressBar from "../ProgressBar/ProgressBar"
 import Volume from "../Volume/Volume"
-import { useAppDispatch, useAppSelector } from "@/hooks"
+import { useAppDispatch, useAppSelector } from "@/components/hooks"
 
 import { setIsShuffle, setNextTrack, setPrevTrack, setIsTrackPlaying, setCurrentTrackIndex } from "@/store/features/playListSlice";
-import { formatSecondsToMMSS} from "@/utils";
+import { formatSecondsToMMSS } from "@/app/lib/formatSecondsToMMSS";
 
 
 export default function BarPlayer() {
@@ -22,8 +22,8 @@ export default function BarPlayer() {
     const isTrackPlaying = useAppSelector((state) => state.playlist.isPlaying);
 
 
-    const isEnd= useAppSelector((state) => state.playlist.isEnd);
-    const playlist = useAppSelector((state)=> state.playlist.playlist)
+    const isEnd = useAppSelector((state) => state.playlist.isEnd);
+    const playlist = useAppSelector((state) => state.playlist.playlist)
 
     // использование useRef для доступа а audio
     const audioRef = useRef<null | HTMLAudioElement>(null)
@@ -42,11 +42,11 @@ export default function BarPlayer() {
             dispatch(setIsTrackPlaying(!isTrackPlaying));
         }
     };
-//обернула диспатчи соответствующих функций в функции hendle
+    //обернула диспатчи соответствующих функций в функции hendle
     const handleNextTrack = () => {
         dispatch(setNextTrack());
     }
-//обернула диспатчи соответствующих функций в функции hendle
+    //обернула диспатчи соответствующих функций в функции hendle
     const handlePrevTrack = () => {
         dispatch(setPrevTrack());
     }
@@ -107,13 +107,13 @@ export default function BarPlayer() {
     }, [currentTrackIndex, playlist, dispatch]);
 
     //     // Устанавливаем источник аудио и обработчик события `ended` при изменении трека
-        useEffect(() => {
-            audioRef.current?.addEventListener("ended", handleEnded)
+    useEffect(() => {
+        audioRef.current?.addEventListener("ended", handleEnded)
 
-            return () => {
-                audioRef.current?.removeEventListener('ended', handleEnded);
-            };
-        }, [currentTrackIndex, handleEnded]);
+        return () => {
+            audioRef.current?.removeEventListener('ended', handleEnded);
+        };
+    }, [currentTrackIndex, handleEnded]);
 
     // //NEW
 
@@ -125,7 +125,7 @@ export default function BarPlayer() {
                         {/* добавила id для аудио для обращения к этому элементу в другом компоненте */}
                         <audio id="audio-id" ref={audioRef} src={currentTrack.track_file} loop={isLoop}></audio>
 
-                        {!isNaN (Number(duration)) && (
+                        {!isNaN(Number(duration)) && (
                             <div className={styles.timeBlock}>
                                 {/* `${formatDuration([currentTime,0])}/${formatDuration([duration,0])}` */}
                                 {/* `${duration(currentTime).format('mm:ss')}/${duration}` */}
@@ -139,33 +139,33 @@ export default function BarPlayer() {
                             <div className={styles.barPlayer}>
                                 <div className={styles.playerControls}>
                                     <div onClick={handlePrevTrack}
-                                     className={classNames(styles.playerBtnPrev, styles.btn)}>
+                                        className={classNames(styles.playerBtnPrev, styles.btn)}>
                                         <svg className={styles.playerBtnPrevSvg}>
-                                            <use xlinkHref="img/icon/sprite.svg#icon-prev" />
+                                            <use xlinkHref="/img/icon/sprite.svg#icon-prev" />
                                         </svg>
                                     </div>
                                     <div onClick={togglePlay} className={classNames(styles.playerBtnPlay, styles.btn)}>
                                         <svg className={styles.playerBtnPlaySvg}>
-                                            <use xlinkHref={`img/icon/sprite.svg#${isTrackPlaying ? "icon-pause" : "icon-play"}`} />
+                                            <use xlinkHref={`/img/icon/sprite.svg#${isTrackPlaying ? "icon-pause" : "icon-play"}`} />
                                         </svg>
                                     </div>
                                     <div onClick={handleNextTrack}
-                                    className={classNames(styles.playerBtnNext, styles.btn)}>
+                                        className={classNames(styles.playerBtnNext, styles.btn)}>
                                         <svg className={styles.playerBtnNextSvg}>
-                                            <use xlinkHref="img/icon/sprite.svg#icon-next" />
+                                            <use xlinkHref="/img/icon/sprite.svg#icon-next" />
                                         </svg>
                                     </div>
                                     <div onClick={toggleLoop} className={classNames(styles.playerBtnRepeat, styles.btnIcon)}>
                                         <svg className={styles.playerBtnRepeatSvg}>
-                                            <use xlinkHref={`img/icon/sprite.svg#${isLoop ? "icon-repeat-active" : "icon-repeat"}`} />
+                                            <use xlinkHref={`/img/icon/sprite.svg#${isLoop ? "icon-repeat-active" : "icon-repeat"}`} />
                                         </svg>
                                     </div>
 
-                                    <div onClick={()=> dispatch(setIsShuffle(!isShuffle))} className={classNames(styles.playerBtnShuffle, styles.btnIcon)}>
+                                    <div onClick={() => dispatch(setIsShuffle(!isShuffle))} className={classNames(styles.playerBtnShuffle, styles.btnIcon)}>
                                         <svg className={styles.playerBtnShuffleSvg}>
-                                            {/*<use xlinkHref="img/icon/sprite.svg#icon-shuffle" />*/}
+                                            {/*<use xlinkHref="/img/icon/sprite.svg#icon-shuffle" />*/}
 
-                                            <use xlinkHref={`img/icon/sprite.svg#${isShuffle ? "icon-shuffle-active" : "icon-shuffle"}`}/>
+                                            <use xlinkHref={`/img/icon/sprite.svg#${isShuffle ? "icon-shuffle-active" : "icon-shuffle"}`} />
                                         </svg>
                                     </div>
                                 </div>
@@ -173,7 +173,7 @@ export default function BarPlayer() {
                                     <div className={styles.trackPlayContain}>
                                         <div className={styles.trackPlayImage}>
                                             <svg className={styles.trackPlaySvg}>
-                                                <use xlinkHref="img/icon/sprite.svg#icon-note" />
+                                                <use xlinkHref="/img/icon/sprite.svg#icon-note" />
                                             </svg>
                                         </div>
                                         <div className={styles.trackPlayAuthor}>
@@ -190,12 +190,12 @@ export default function BarPlayer() {
                                     <div className={styles.trackPlayLikeDis}>
                                         <div className={classNames(styles.trackPlayLike, styles.btnIcon)}>
                                             <svg className={styles.trackPlayLikeSvg}>
-                                                <use xlinkHref="img/icon/sprite.svg#icon-like" />
+                                                <use xlinkHref="/img/icon/sprite.svg#icon-like" />
                                             </svg>
                                         </div>
                                         <div className={classNames(styles.trackPlayDislike, styles.btnIcon)}>
                                             <svg className={styles.trackPlayDislikeSvg}>
-                                                <use xlinkHref="img/icon/sprite.svg#icon-dislike" />
+                                                <use xlinkHref="/img/icon/sprite.svg#icon-dislike" />
                                             </svg>
                                         </div>
                                     </div>

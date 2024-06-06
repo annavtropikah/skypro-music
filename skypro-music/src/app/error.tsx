@@ -1,8 +1,12 @@
  'use client';
+import BarPlayer from "@/components/BarPlayer/Barplayer";
  import styles from "./error.module.css"
 
 
 import { useEffect } from 'react';
+import Sidebar from "@/components/Sidebar/Sidebar";
+import Nav from "@/components/Nav/Nav";
+import Search from "@/components/Search/Search";
 
 type ErrorType={
 error: Error,
@@ -16,9 +20,29 @@ export default function Error({ error, reset }:ErrorType) {
   }, [error]);
 
   return (
-    <div className={styles.errorBlock}>
-      <h2>Что-то пошло не так! 😭</h2>
-      <button className={styles.errorButton} onClick={reset}>Попробовать снова</button>
+    <div className={styles.wrapper}>
+    <div className={styles.container}>
+      <main className={styles.main}>
+        <Nav></Nav>
+        <div className={styles.mainCenterblock}>
+          <Search></Search>
+          <div className={styles.errorH2}>404</div>
+          <div className={styles.errorSubttl}>
+            Страница не найдена 😭
+       
+          </div>
+          <div className={styles.errorShadedText}>
+            Возможно, она была удалена <br /> или перенесена на другой адрес
+          </div>
+          <button onClick={reset} className={styles.errorButton}>
+            Вернуться на главную
+          </button>
+        </div>
+      </main>
+      <BarPlayer></BarPlayer>
+      <footer className="footer" />
     </div>
-  );
+  </div>
+);
 }
+

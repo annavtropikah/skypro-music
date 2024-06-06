@@ -17,7 +17,7 @@ function Volume({ min = 0, max=1, value, step, onChange }: VolumeBarType) {
             <div className={styles.volumeContent}>
                 <div className={styles.volumeImage}>
                     <svg className={styles.volumeSvg}>
-                        <use xlinkHref="img/icon/sprite.svg#icon-volume" />
+                        <use xlinkHref="/img/icon/sprite.svg#icon-volume" />
                     </svg>
                 </div>
                 <div className={classNames(styles.volumeProgress, styles.btn)}>
