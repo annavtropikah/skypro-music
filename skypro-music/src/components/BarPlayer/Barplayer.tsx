@@ -1,6 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation';
-import {ChangeEvent, useCallback, useEffect, useMemo, useRef, useState} from "react"
+import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import styles from "./BarPlayer.module.css"
 import classNames from 'classnames'
 
@@ -74,9 +74,7 @@ export default function BarPlayer() {
 
     const [volume, setVolume] = useState<number>(0.1);
 
-    const isAlreadyLicked = useMemo(() => {
-        return currentTrack ? likedTracks.filter((track) => track.id === currentTrack.id).length : false;
-    }, [currentTrack, likedTracks])
+    
 
     useEffect(() => {
         if (audioRef.current) {
@@ -135,24 +133,49 @@ export default function BarPlayer() {
         };
     }, [currentTrackIndex, handleEnded]);
 
-   
-   
-   
+
+
+
     // //NEW
+
+    const isAlreadyLicked = useMemo(() => {
+        return currentTrack ? likedTracks.filter((track) => track.id === currentTrack.id).length : false;
+    }, [currentTrack, likedTracks])
 
     const handleLikeTrack = () => {
         if (!currentTrack?.id) {
             return;
         }
+        if (!tokens.access) {
+            alert("необходимо авторизоватся");
+        }
 
         if (isAlreadyLicked) {
-            return;
-        }
-        if(!tokens.access) {
-            alert ("необходимо авторизоватся");
+            deleteFavoriteTracks(currentTrack.id, tokens.access).then(() => {
+                const newLickedTracks = likedTracks.filter((track) => track.id !== currentTrack.id);
+                dispatch(setLikedTracks({ likedTracks: newLickedTracks }))
+            }).catch((error) => {
+                if (error.message === '401') {
+                    refreshToken(tokens.refresh).then((data) => {
+                        dispatch(setToken({
+                            refresh: tokens.refresh,
+                            access: data.access,
+                        }))
+                    }).catch(() => {
+                        dispatch(setUser(DEFAULT_USER))
+                        dispatch(setToken({
+                            access: '',
+                            refresh: '',
+                        }))
+                        router.push('/signin');
+                    })
+                }
+            })
         }
 
-        addFavoriteTracks(currentTrack.id, tokens.access).then(() => {
+
+        if (!isAlreadyLicked) 
+        {addFavoriteTracks(currentTrack.id, tokens.access).then(() => {
             dispatch(setLikedTracks({ likedTracks: [...likedTracks, currentTrack] }))
         }).catch((error) => {
             if (error.message === '401') {
@@ -172,37 +195,38 @@ export default function BarPlayer() {
             }
         })
     }
-
-    const handleDislikeTrack = () => {
-        if (!currentTrack?.id) {
-            return;
-        }
-
-        if (!isAlreadyLicked) {
-            return;
-        }
-
-        deleteFavoriteTracks(currentTrack.id, tokens.access).then(() => {
-            const newLickedTracks = likedTracks.filter((track) => track.id !== currentTrack.id);
-            dispatch(setLikedTracks({ likedTracks: newLickedTracks }))
-        }).catch((error) => {
-            if (error.message === '401') {
-                refreshToken(tokens.refresh).then((data) => {
-                    dispatch(setToken({
-                        refresh: tokens.refresh,
-                        access: data.access,
-                    }))
-                }).catch(() => {
-                    dispatch(setUser(DEFAULT_USER))
-                    dispatch(setToken({
-                        access: '',
-                        refresh: '',
-                    }))
-                    router.push('/signin');
-                })
-            }
-        })
     }
+
+    // const handleDislikeTrack = () => {
+    //     if (!currentTrack?.id) {
+    //         return;
+    //     }
+
+    //     if (!isAlreadyLicked) {
+    //         return;
+    //     }
+
+    //     deleteFavoriteTracks(currentTrack.id, tokens.access).then(() => {
+    //         const newLickedTracks = likedTracks.filter((track) => track.id !== currentTrack.id);
+    //         dispatch(setLikedTracks({ likedTracks: newLickedTracks }))
+    //     }).catch((error) => {
+    //         if (error.message === '401') {
+    //             refreshToken(tokens.refresh).then((data) => {
+    //                 dispatch(setToken({
+    //                     refresh: tokens.refresh,
+    //                     access: data.access,
+    //                 }))
+    //             }).catch(() => {
+    //                 dispatch(setUser(DEFAULT_USER))
+    //                 dispatch(setToken({
+    //                     access: '',
+    //                     refresh: '',
+    //                 }))
+    //                 router.push('/signin');
+    //             })
+    //         }
+    //     })
+    // }
 
     return (
         <>
@@ -277,15 +301,15 @@ export default function BarPlayer() {
                                     <div className={styles.trackPlayLikeDis}>
                                         <div className={classNames(styles.trackPlayLike, styles.btnIcon)} onClick={handleLikeTrack}>
                                             <svg className={styles.trackPlayLikeSvg}>
-                        
+
                                                 <use xlinkHref={`/img/icon/sprite.svg#${isAlreadyLicked ? "icon-like-active" : "icon-like"}`} />
                                             </svg>
                                         </div>
-                                        <div className={classNames(styles.trackPlayDislike, styles.btnIcon)} onClick={handleDislikeTrack}>
+                                        {/* <div className={classNames(styles.trackPlayDislike, styles.btnIcon)} onClick={handleDislikeTrack}>
                                             <svg className={styles.trackPlayDislikeSvg}>
                                                 <use xlinkHref="/img/icon/sprite.svg#icon-dislike" />
                                             </svg>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                             </div>
