@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/components/hooks";
 import { useEffect, useState } from "react";
 import { getTracks } from "@/api/tracks";
 import { setInitialTracks } from "@/store/features/playListSlice";
-import { trackType } from "@/types";
+
 import styles from "./layout.module.css";
 import Filters from "@/components/Filters/Filters";
 

@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { Provider } from "react-redux";
 import { makeStore, AppStore } from "./store";
-import { type } from "os";
+
 
 type ReduxProviderType = {
     children: React.ReactNode,

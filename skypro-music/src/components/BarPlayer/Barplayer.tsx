@@ -1,5 +1,5 @@
 'use client'
-
+import { useRouter } from 'next/navigation';
 import {ChangeEvent, useCallback, useEffect, useMemo, useRef, useState} from "react"
 import styles from "./BarPlayer.module.css"
 import classNames from 'classnames'
@@ -18,14 +18,16 @@ import {
     setLikedTracks
 } from "@/store/features/playListSlice";
 import { formatSecondsToMMSS } from "@/app/lib/formatSecondsToMMSS";
-import { addFavoriteTracks, deleteFavoriteTracks } from "@/api/tracks";
-import {trackType} from "@/types";
+import { addFavoriteTracks, deleteFavoriteTracks, refreshToken } from "@/api/tracks";
+
+import { DEFAULT_USER, setToken, setUser } from "@/store/features/userSlice"
+
 
 
 export default function BarPlayer() {
 
     const dispatch = useAppDispatch()
-
+    const router = useRouter();
     const currentTrack = useAppSelector((state) => state.playlist.currentTrack);
 
     const currentTrackIndex = useAppSelector((state) => state.playlist.currentTrackIndex);
@@ -33,7 +35,7 @@ export default function BarPlayer() {
     const isTrackPlaying = useAppSelector((state) => state.playlist.isPlaying);
 
 
-    const isEnd = useAppSelector((state) => state.playlist.isEnd);
+
     const playlist = useAppSelector((state) => state.playlist.playlist)
 
     const tokens = useAppSelector((state) => state.user.tokens)
@@ -152,8 +154,22 @@ export default function BarPlayer() {
 
         addFavoriteTracks(currentTrack.id, tokens.access).then(() => {
             dispatch(setLikedTracks({ likedTracks: [...likedTracks, currentTrack] }))
-        }).catch(() => {
-            // TODO: сделать проверку токена и отправлять refresh, как делали в getFavoriteTracks
+        }).catch((error) => {
+            if (error.message === '401') {
+                refreshToken(tokens.refresh).then((data) => {
+                    dispatch(setToken({
+                        refresh: tokens.refresh,
+                        access: data.access,
+                    }))
+                }).catch(() => {
+                    dispatch(setUser(DEFAULT_USER))
+                    dispatch(setToken({
+                        access: '',
+                        refresh: '',
+                    }))
+                    router.push('/signin');
+                })
+            }
         })
     }
 
@@ -169,8 +185,22 @@ export default function BarPlayer() {
         deleteFavoriteTracks(currentTrack.id, tokens.access).then(() => {
             const newLickedTracks = likedTracks.filter((track) => track.id !== currentTrack.id);
             dispatch(setLikedTracks({ likedTracks: newLickedTracks }))
-        }).catch(() => {
-            // TODO: сделать проверку токена и отправлять refresh, как делали в getFavoriteTracks
+        }).catch((error) => {
+            if (error.message === '401') {
+                refreshToken(tokens.refresh).then((data) => {
+                    dispatch(setToken({
+                        refresh: tokens.refresh,
+                        access: data.access,
+                    }))
+                }).catch(() => {
+                    dispatch(setUser(DEFAULT_USER))
+                    dispatch(setToken({
+                        access: '',
+                        refresh: '',
+                    }))
+                    router.push('/signin');
+                })
+            }
         })
     }
 

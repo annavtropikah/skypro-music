@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation';
 import Centerblock from "@/components/Centerblock/Centerblock"
 
 import { useAppDispatch, useAppSelector } from "@/components/hooks";
-import { useEffect, useState } from "react";
-import { getFavoriteTracks, getTracks, refreshToken } from "@/api/tracks";
-import { setInitialTracks, setLikedTracks } from "@/store/features/playListSlice";
+import { useEffect } from "react";
+import { getFavoriteTracks, refreshToken } from "@/api/tracks";
+import { setLikedTracks } from "@/store/features/playListSlice";
 import styles from "../layout.module.css";
 import {DEFAULT_USER, setToken, setUser} from "@/store/features/userSlice";
 
@@ -34,7 +34,7 @@ export default function FavouriteTrackspage() {
                         access: '',
                         refresh: '',
                     }))
-                    //  TODO: navigate на логин или на общий плейлист
+                    router.push('/signin');
                 })
             }
         })

@@ -4,7 +4,7 @@ import BarPlayer from "@/components/BarPlayer/Barplayer";
 
 
 import { useEffect } from 'react';
-import Sidebar from "@/components/Sidebar/Sidebar";
+
 import Nav from "@/components/Nav/Nav";
 import Search from "@/components/Search/Search";
 

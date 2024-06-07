@@ -2,7 +2,6 @@
 import Track from "@/components/Track/Track";
 import styles from "./Centerblock.module.css"
 import classNames from 'classnames'
-import Filters from "../Filters/Filters";
 
 
 import { trackType } from "@/types";
