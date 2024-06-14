@@ -3,10 +3,10 @@ import classNames from "classnames"
 import styles from "./Track.module.css"
 import { useAppDispatch, useAppSelector } from "@/components/hooks";
 import { trackType } from "@/types";
-import { setCurrentTrack, setIsTrackPlaying, setLikedTracks } from "@/store/features/playListSlice";
+import {setCurrentTrack, setInitialTracks, setIsTrackPlaying, setLikedTracks} from "@/store/features/playListSlice";
 import { formatSecondsToMMSS } from "@/app/lib/formatSecondsToMMSS";
-import { useMemo } from "react";
-import { addFavoriteTracks, deleteFavoriteTracks, refreshToken } from "@/api/tracks";
+import {useEffect, useMemo, useState} from "react";
+import {addFavoriteTracks, deleteFavoriteTracks, getTracks, refreshToken} from "@/api/tracks";
 import { DEFAULT_USER, setToken, setUser } from "@/store/features/userSlice";
 import { useRouter } from 'next/navigation';
 
@@ -31,68 +31,51 @@ export default function Track({ trackData }: TrackType) {
 
   const handleTrackClick = () => {
     dispatch(setCurrentTrack({ trackData, tracksData }))
-    dispatch(setIsTrackPlaying((true)));
+    dispatch(setIsTrackPlaying(!isPlaying));
   }
 
+  const userId = useAppSelector((state) => state.user.user.id)
+  const [isLikeTrack, setIsLikeTrack] = useState(false)
+  const isLike = Boolean(trackData?.stared_user ? trackData?.stared_user.find((el) => el.id === userId) : [])
 
-  
-  const isAlreadyLicked = useMemo(() => {
-    return currentTrack ? likedTracks.filter((track) => track.id === currentTrack.id).length : false;
-  }, [currentTrack, likedTracks])
+
+
+  useEffect(() => {
+    setIsLikeTrack(isLike)
+  }, [trackData]);
 
   const handleLikeTrack = () => {
-    if (!currentTrack?.id) {
-      return;
-    }
+ 
     if (!tokens.access) {
       alert("необходимо авторизоватся");
+      return
     }
+    setIsLikeTrack(!isLikeTrack)
 
-    if (isAlreadyLicked) {
-      deleteFavoriteTracks(currentTrack.id, tokens.access).then(() => {
-        const newLickedTracks = likedTracks.filter((track) => track.id !== currentTrack.id);
-        dispatch(setLikedTracks({ likedTracks: newLickedTracks }))
-      }).catch((error) => {
-        if (error.message === '401') {
-          refreshToken(tokens.refresh).then((data) => {
-            dispatch(setToken({
-              refresh: tokens.refresh,
-              access: data.access,
-            }))
-          }).catch(() => {
-            dispatch(setUser(DEFAULT_USER))
-            dispatch(setToken({
-              access: '',
-              refresh: '',
-            }))
-            router.push('/signin');
-          })
-        }
-      })
-    }
+    const likeFunc = isLikeTrack ? deleteFavoriteTracks : addFavoriteTracks
 
-
-    if (!isAlreadyLicked) {
-      addFavoriteTracks(currentTrack.id, tokens.access).then(() => {
-        dispatch(setLikedTracks({ likedTracks: [...likedTracks, currentTrack] }))
-      }).catch((error) => {
-        if (error.message === '401') {
-          refreshToken(tokens.refresh).then((data) => {
-            dispatch(setToken({
-              refresh: tokens.refresh,
-              access: data.access,
-            }))
-          }).catch(() => {
-            dispatch(setUser(DEFAULT_USER))
-            dispatch(setToken({
-              access: '',
-              refresh: '',
-            }))
-            router.push('/signin');
-          })
-        }
-      })
-    }
+    likeFunc(trackData.id, tokens.access).then(() => {
+      return getTracks()
+    }).then((res) => {
+      dispatch(setInitialTracks(res.tracks))
+    })
+        .catch((error) => {
+          if (error.message === '401') {
+            refreshToken(tokens.refresh).then((data) => {
+              dispatch(setToken({
+                refresh: tokens.refresh,
+                access: data.access,
+              }))
+            }).catch(() => {
+              dispatch(setUser(DEFAULT_USER))
+              dispatch(setToken({
+                access: '',
+                refresh: '',
+              }))
+              router.push('/signin');
+            })
+          }
+        })
   }
 
 
@@ -154,7 +137,7 @@ export default function Track({ trackData }: TrackType) {
         <div className={classNames(styles.trackTime, styles.btnIcon)}>
 
           <svg onClick={handleLikeTrack} className={styles.trackTimeSvg}>
-            <use xlinkHref={`/img/icon/sprite.svg#${isAlreadyLicked ? "icon-like-active" : "icon-like"}`} />
+            <use xlinkHref={`/img/icon/sprite.svg#${isLikeTrack ? "icon-like-active" : "icon-like"}`} />
           </svg>
           <span className={styles.trackTimeText}>{formatSecondsToMMSS(duration_in_seconds)}</span>
         </div>

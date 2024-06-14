@@ -15,25 +15,22 @@ import {
     setPrevTrack,
     setIsTrackPlaying,
     setCurrentTrackIndex,
-    setLikedTracks
+    setLikedTracks, setInitialTracks
 } from "@/store/features/playListSlice";
 import { formatSecondsToMMSS } from "@/app/lib/formatSecondsToMMSS";
-import { addFavoriteTracks, deleteFavoriteTracks, refreshToken } from "@/api/tracks";
+import {addFavoriteTracks, deleteFavoriteTracks, getTracks, refreshToken} from "@/api/tracks";
 
 import { DEFAULT_USER, setToken, setUser } from "@/store/features/userSlice"
 
 
 
 export default function BarPlayer() {
-
     const dispatch = useAppDispatch()
     const router = useRouter();
     const currentTrack = useAppSelector((state) => state.playlist.currentTrack);
-
     const currentTrackIndex = useAppSelector((state) => state.playlist.currentTrackIndex);
     const isShuffle = useAppSelector((state) => state.playlist.isShuffle);
     const isTrackPlaying = useAppSelector((state) => state.playlist.isPlaying);
-
 
 
     const playlist = useAppSelector((state) => state.playlist.playlist)
@@ -45,6 +42,14 @@ export default function BarPlayer() {
     const audioRef = useRef<null | HTMLAudioElement>(null)
 
     const [currentTime, setCurrentTime] = useState(0);
+
+    const userId = useAppSelector((state) => state.user.user.id)
+    const [isLikeTrack, setIsLikeTrack] = useState(false)
+    const isLike = Boolean(currentTrack?.stared_user ? currentTrack?.stared_user.find((el) => el.id === userId) : [])
+
+    useEffect(() => {
+        setIsLikeTrack(isLike)
+    }, [currentTrack]);
 
     const duration = audioRef.current?.duration;
     //функция для воспроизведения и паузы
@@ -103,6 +108,8 @@ export default function BarPlayer() {
     useEffect(() => {
         if (isTrackPlaying) {
             audioRef.current?.play();
+        } else {
+            audioRef.current?.pause();
         }
     }, [currentTrack?.id, isTrackPlaying])
 
@@ -138,23 +145,24 @@ export default function BarPlayer() {
 
     // //NEW
 
-    const isAlreadyLicked = useMemo(() => {
-        return currentTrack ? likedTracks.filter((track) => track.id === currentTrack.id).length : false;
-    }, [currentTrack, likedTracks])
-
     const handleLikeTrack = () => {
         if (!currentTrack?.id) {
             return;
         }
         if (!tokens.access) {
             alert("необходимо авторизоватся");
+            return
         }
+        setIsLikeTrack(!isLikeTrack)
 
-        if (isAlreadyLicked) {
-            deleteFavoriteTracks(currentTrack.id, tokens.access).then(() => {
-                const newLickedTracks = likedTracks.filter((track) => track.id !== currentTrack.id);
-                dispatch(setLikedTracks({ likedTracks: newLickedTracks }))
-            }).catch((error) => {
+        const likeFunc = isLikeTrack ? deleteFavoriteTracks : addFavoriteTracks
+
+        likeFunc(currentTrack.id, tokens.access).then(() => {
+                return getTracks()
+            }).then((res) => {
+                dispatch(setInitialTracks(res.tracks))
+            })
+                .catch((error) => {
                 if (error.message === '401') {
                     refreshToken(tokens.refresh).then((data) => {
                         dispatch(setToken({
@@ -171,75 +179,17 @@ export default function BarPlayer() {
                     })
                 }
             })
-        }
-
-
-        if (!isAlreadyLicked) 
-        {addFavoriteTracks(currentTrack.id, tokens.access).then(() => {
-            dispatch(setLikedTracks({ likedTracks: [...likedTracks, currentTrack] }))
-        }).catch((error) => {
-            if (error.message === '401') {
-                refreshToken(tokens.refresh).then((data) => {
-                    dispatch(setToken({
-                        refresh: tokens.refresh,
-                        access: data.access,
-                    }))
-                }).catch(() => {
-                    dispatch(setUser(DEFAULT_USER))
-                    dispatch(setToken({
-                        access: '',
-                        refresh: '',
-                    }))
-                    router.push('/signin');
-                })
-            }
-        })
     }
-    }
-
-    // const handleDislikeTrack = () => {
-    //     if (!currentTrack?.id) {
-    //         return;
-    //     }
-
-    //     if (!isAlreadyLicked) {
-    //         return;
-    //     }
-
-    //     deleteFavoriteTracks(currentTrack.id, tokens.access).then(() => {
-    //         const newLickedTracks = likedTracks.filter((track) => track.id !== currentTrack.id);
-    //         dispatch(setLikedTracks({ likedTracks: newLickedTracks }))
-    //     }).catch((error) => {
-    //         if (error.message === '401') {
-    //             refreshToken(tokens.refresh).then((data) => {
-    //                 dispatch(setToken({
-    //                     refresh: tokens.refresh,
-    //                     access: data.access,
-    //                 }))
-    //             }).catch(() => {
-    //                 dispatch(setUser(DEFAULT_USER))
-    //                 dispatch(setToken({
-    //                     access: '',
-    //                     refresh: '',
-    //                 }))
-    //                 router.push('/signin');
-    //             })
-    //         }
-    //     })
-    // }
 
     return (
         <>
             {currentTrack && (
                 <div className={styles.bar}>
                     <div className={styles.barContent}>
-                        {/* добавила id для аудио для обращения к этому элементу в другом компоненте */}
                         <audio id="audio-id" ref={audioRef} src={currentTrack.track_file} loop={isLoop}></audio>
 
                         {!isNaN(Number(duration)) && (
                             <div className={styles.timeBlock}>
-                                {/* `${formatDuration([currentTime,0])}/${formatDuration([duration,0])}` */}
-                                {/* `${duration(currentTime).format('mm:ss')}/${duration}` */}
                                 {formatSecondsToMMSS(currentTime)}/{formatSecondsToMMSS(Number(duration))}
                             </div>
                         )}
@@ -302,14 +252,9 @@ export default function BarPlayer() {
                                         <div className={classNames(styles.trackPlayLike, styles.btnIcon)} onClick={handleLikeTrack}>
                                             <svg className={styles.trackPlayLikeSvg}>
 
-                                                <use xlinkHref={`/img/icon/sprite.svg#${isAlreadyLicked ? "icon-like-active" : "icon-like"}`} />
+                                                <use xlinkHref={`/img/icon/sprite.svg#${isLikeTrack ? "icon-like-active" : "icon-like"}`} />
                                             </svg>
                                         </div>
-                                        {/* <div className={classNames(styles.trackPlayDislike, styles.btnIcon)} onClick={handleDislikeTrack}>
-                                            <svg className={styles.trackPlayDislikeSvg}>
-                                                <use xlinkHref="/img/icon/sprite.svg#icon-dislike" />
-                                            </svg>
-                                        </div> */}
                                     </div>
                                 </div>
                             </div>
